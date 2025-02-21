@@ -20,25 +20,51 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Border Height="25" VerticalAlignment="Top" Background="LightBlue" Grid.Row="0" Grid.Column="0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <!--<Button x:Name="File" Content="File" Width="50" Height="40" FontSize="12"/>
-                <Button x:Name="New" Content="New" Width="50" Height="40" FontSize="12"/>
-                <Button x:Name="Edit" Content="Edit" Width="50" Height="40" FontSize="12"/>-->
-                <SymbolIcon x:Name="File_sym" Symbol="OpenFile" Foreground="Black" Margin="2"/>
-                <!--<TextBlock Text="File" VerticalAlignment="Center" FontSize="12" Foreground="Black"/>-->
-                <Button x:Name="File" Content="File" Width="50" Height="40" FontSize="12" Click="fileOnClick"/>
-                <SymbolIcon x:Name="Save" Symbol="Save" Foreground="Black" Margin="2"/>
-                <TextBlock Text="Save" VerticalAlignment="Center" FontSize="12" Foreground="Black"/>
-                <SymbolIcon  x:Name="Edit" Symbol="Edit" Foreground="Black" Margin="2"/>
-                <TextBlock Text="Edit" VerticalAlignment="Center" FontSize="12" Foreground="Black"/>
-            </StackPanel>
-        </Border>
-        
-        <Border Background="Black" Grid.Row="1" Grid.Column="0" Width="10000" Height="10000">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Height="25" VerticalAlignment="Top" Background="#FF2C2C2C" Grid.Row="0" Grid.Column="0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <!--<TextBlock Text="File" VerticalAlignment="Center" FontSize="12" Foreground="Black"/>-->
+                    <Button x:Name="File" Content="File" Width="50" Height="40" FontSize="12" Foreground="White" Click="fileOnClick"/>
+                    <!--<SymbolIcon x:Name="File_sym" Symbol="OpenFile" Foreground="Black" Margin="1"/>-->
+                    <Button x:Name="Edit" Content="Edit" Width="50" Height="40" FontSize="12" Foreground="White" Click="editOnClick"/>
+                    <!--<SymbolIcon x:Name="Save_sym" Symbol="Save" Foreground="Black" Margin="1"/>-->
+                    <Button x:Name="View" Content="View" Width="50" Height="40" FontSize="12" Foreground="White" Click="viewOnClick"/>
+                    <!--<SymbolIcon  x:Name="Edit_sym" Symbol="Edit" Foreground="Black" Margin="1"/>-->
+                </StackPanel>
+            </Border>
+            <Border Height="25" VerticalAlignment="Top" Background="#FF2C2C2C" Grid.Row="0" Grid.Column="1">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <DropDownButton AutomationProperties.Name="Email">
+                        <DropDownButton.Content>
+                            <FontIcon Glyph="&#xE945;" FontSize="10"/>
+                        </DropDownButton.Content>
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Text="Rewrite"/>
+                                <MenuFlyoutItem Text="Make shorter"/>
+                                <MenuFlyoutItem Text="Make longer"/>
+                                <MenuFlyoutItem Text="Change tone"/>
+                                <MenuFlyoutItem Text="Change format"/>
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+
+                    <FontIcon Glyph="&#xE77B;" FontSize="14" Margin="5"/>
+                    <Button x:Name="Setting" Width="50" Height="40" FontSize="10">
+                        <FontIcon Glyph="&#xE713;" FontSize="15"/>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Border Background="#FF272727" Grid.Row="1" Grid.Column="0" Width="10000" Height="10000">
         </Border>
 
-        <Border VerticalAlignment="Bottom" Background="LightBlue" Grid.Row="2" Grid.Column="0" Width="10000" Height="25">
+        <Border VerticalAlignment="Bottom" Background="#FF2C2C2C" Grid.Row="2" Grid.Column="0" Width="10000" Height="25">
         </Border>
     </Grid>
 </Window>
