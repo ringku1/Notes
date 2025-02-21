@@ -25,8 +25,9 @@
                 <!--<Button x:Name="File" Content="File" Width="50" Height="40" FontSize="12"/>
                 <Button x:Name="New" Content="New" Width="50" Height="40" FontSize="12"/>
                 <Button x:Name="Edit" Content="Edit" Width="50" Height="40" FontSize="12"/>-->
-                <SymbolIcon x:Name="File" Symbol="OpenFile" Foreground="Black" Margin="2"/>
-                <TextBlock Text="File" VerticalAlignment="Center" FontSize="12" Foreground="Black"/>
+                <SymbolIcon x:Name="File_sym" Symbol="OpenFile" Foreground="Black" Margin="2"/>
+                <!--<TextBlock Text="File" VerticalAlignment="Center" FontSize="12" Foreground="Black"/>-->
+                <Button x:Name="File" Content="File" Width="50" Height="40" FontSize="12" Click="fileOnClick"/>
                 <SymbolIcon x:Name="Save" Symbol="Save" Foreground="Black" Margin="2"/>
                 <TextBlock Text="Save" VerticalAlignment="Center" FontSize="12" Foreground="Black"/>
                 <SymbolIcon  x:Name="Edit" Symbol="Edit" Foreground="Black" Margin="2"/>
