@@ -204,5 +204,9 @@ namespace WinUIApp1
         private MenuFlyout? fileMenuFlyout;
         private MenuFlyout? editMenuFlyout;
         private MenuFlyout? viewMenuFlyout;
+
+        private void MenuBarItem_ContextCanceled(UIElement sender, RoutedEventArgs args) {
+
+        }
     }
 }
