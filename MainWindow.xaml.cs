@@ -24,19 +24,25 @@ namespace WinUIApp1
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        public MainWindow() {
+        public MainWindow()
+        {
             this.InitializeComponent();
-            if (this.Content != null) {
+            if (this.Content != null)
+            {
                 mainRoot = this.Content.XamlRoot;
             }
+
         }
 
-        private async void ShowInfoDialog(object sender, RoutedEventArgs e) {
-            if (mainRoot == null) {
+        private async void ShowInfoDialog(object sender, RoutedEventArgs e)
+        {
+            if (mainRoot == null)
+            {
                 mainRoot = this.Content.XamlRoot;
             }
 
-            ContentDialog dialog = new ContentDialog {
+            ContentDialog dialog = new ContentDialog
+            {
                 Title = "Information",
                 Content = "This is a open message.",
                 CloseButtonText = "OK",
@@ -46,12 +52,48 @@ namespace WinUIApp1
             await dialog.ShowAsync();
         }
 
-        private void fileOnClick(object sender, RoutedEventArgs e) {
+        private void TabViewNewTab(TabView sender, Object args)
+        {
+            var Newtab = new TabViewItem
+            {
+                Header = "Untitled",
+                Content = new ScrollViewer
+                {
+                    HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    Content = new TextBox
+                    {
+                        IsEnabled = true,
+                        AcceptsReturn = true,
+                        Height = 1000
+                    }
+                },
+                IsClosable = true
+            };
+            tabview.TabItems.Add(Newtab);
+        }
+
+        private void TabCloseTab(TabView sender, TabViewTabCloseRequestedEventArgs args)
+        {
+            sender.TabItems.Remove(args.Tab);
+        }
+
+        private void fileOnClick(object sender, RoutedEventArgs e)
+        {
             var newTabItem = new MenuFlyoutItem { Text = "New Tab", Width = 250 };
-            newTabItem.Click += (s, args) => { ShowInfoDialog(s, args); };
+            newTabItem.Click += (s, args) => { TabViewNewTab(tabview, sender); };
 
             var newWindowItem = new MenuFlyoutItem { Text = "New Window", Width = 250 };
-            newWindowItem.Click += (s, args) => { ShowInfoDialog(s, args); };
+            newWindowItem.Click += (s, args) =>
+            {
+                var newWindow = new MainWindow();
+                if(list_win == null)
+                {
+                    list_win = new List<Window>();
+                }
+                list_win.Add(newWindow);
+                newWindow.Activate();
+            };
 
             var openItem = new MenuFlyoutItem { Text = "Open", Width = 250 };
             openItem.Click += (s, args) => { ShowInfoDialog(s, args); };
@@ -75,12 +117,13 @@ namespace WinUIApp1
             closeTabItem.Click += (s, args) => { ShowInfoDialog(s, args); };
 
             var closeWindowItem = new MenuFlyoutItem { Text = "Close window", Width = 250 };
-            closeWindowItem.Click += (s, args) => { ShowInfoDialog(s, args); };
+            closeWindowItem.Click += (s, args) => { this.Close(); };
 
             var exitItem = new MenuFlyoutItem { Text = "Exit", Width = 250 };
-            exitItem.Click += (s, args) => { Application.Current.Exit(); };
+            exitItem.Click += (s, args) => { CloseAllWindows(); };
 
-            if (fileMenuFlyout == null) {
+            if (fileMenuFlyout == null)
+            {
                 fileMenuFlyout = new MenuFlyout();
                 fileMenuFlyout.Items.Add(newTabItem);
                 fileMenuFlyout.Items.Add(newWindowItem);
@@ -102,7 +145,8 @@ namespace WinUIApp1
             fileMenuFlyout.ShowAt(button, point);
         }
 
-        private void editOnClick(object sender, RoutedEventArgs e) {
+        private void editOnClick(object sender, RoutedEventArgs e)
+        {
             var undoItem = new MenuFlyoutItem { Text = "Undo", Width = 250 };
             undoItem.Click += (s, args) => { ShowInfoDialog(s, args); };
 
@@ -139,7 +183,8 @@ namespace WinUIApp1
             var fontItem = new MenuFlyoutItem { Text = "Font", Width = 250 };
             fontItem.Click += (s, args) => { ShowInfoDialog(s, args); };
 
-            if (editMenuFlyout == null) {
+            if (editMenuFlyout == null)
+            {
                 editMenuFlyout = new MenuFlyout();
                 editMenuFlyout.Items.Add(undoItem);
                 editMenuFlyout.Items.Add(new MenuFlyoutSeparator());
@@ -164,7 +209,8 @@ namespace WinUIApp1
             var point = transform.TransformPoint(new Point(-50, button.ActualHeight));
             editMenuFlyout.ShowAt(button, point);
         }
-        private void viewOnClick(object sender, RoutedEventArgs e) {
+        private void viewOnClick(object sender, RoutedEventArgs e)
+        {
             var zoomItem = new MenuFlyoutItem { Text = "Zoom", Width = 250 };
             zoomItem.Click += (s, args) => { ShowInfoDialog(s, args); };
 
@@ -183,7 +229,8 @@ namespace WinUIApp1
             var wordWrapItem = new MenuFlyoutItem { Text = "Word wrap", Width = 250 }; // these should be checked box
             wordWrapItem.Click += (s, args) => { ShowInfoDialog(s, args); };
 
-            if (viewMenuFlyout == null) {
+            if (viewMenuFlyout == null)
+            {
                 viewMenuFlyout = new MenuFlyout();
                 viewMenuFlyout.Items.Add(zoomItem);
                 viewMenuFlyout.Items.Add(zoomInItem);
@@ -198,11 +245,21 @@ namespace WinUIApp1
             var point = transform.TransformPoint(new Point(-100, button.ActualHeight));
             viewMenuFlyout.ShowAt(button, point);
         }
+        private void CloseAllWindows()
+        {
+            if (list_win!=null)
+            {
+            list_win.Clear();
+            }
+            Application.Current.Exit();
+        }
 
 
         private XamlRoot? mainRoot;
         private MenuFlyout? fileMenuFlyout;
         private MenuFlyout? editMenuFlyout;
         private MenuFlyout? viewMenuFlyout;
+        private TabView? tabView;
+        public static List<Window>? list_win { get; set; }
     }
 }

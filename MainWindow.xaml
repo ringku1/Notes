@@ -6,13 +6,14 @@
     xmlns:local="using:WinUIApp1"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Title="WinUIApp1">
-    <!--
-    -->
+
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
+            <!-- Row for TabView -->
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
@@ -20,6 +21,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Title bar with buttons like File, Edit, View -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -27,13 +29,9 @@
             </Grid.ColumnDefinitions>
             <Border Height="25" VerticalAlignment="Top" Background="#FF2C2C2C" Grid.Row="0" Grid.Column="0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <!--<TextBlock Text="File" VerticalAlignment="Center" FontSize="12" Foreground="Black"/>-->
                     <Button x:Name="File" Content="File" Width="50" Height="40" FontSize="12" Foreground="White" Click="fileOnClick"/>
-                    <!--<SymbolIcon x:Name="File_sym" Symbol="OpenFile" Foreground="Black" Margin="1"/>-->
                     <Button x:Name="Edit" Content="Edit" Width="50" Height="40" FontSize="12" Foreground="White" Click="editOnClick"/>
-                    <!--<SymbolIcon x:Name="Save_sym" Symbol="Save" Foreground="Black" Margin="1"/>-->
                     <Button x:Name="View" Content="View" Width="50" Height="40" FontSize="12" Foreground="White" Click="viewOnClick"/>
-                    <!--<SymbolIcon  x:Name="Edit_sym" Symbol="Edit" Foreground="Black" Margin="1"/>-->
                 </StackPanel>
             </Border>
             <Border Height="25" VerticalAlignment="Top" Background="#FF2C2C2C" Grid.Row="0" Grid.Column="1">
@@ -61,9 +59,20 @@
             </Border>
         </Grid>
 
-        <Border Background="#FF272727" Grid.Row="1" Grid.Column="0" Width="10000" Height="10000">
-        </Border>
+        <!-- TabView just below the first row -->
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+            <muxc:TabView x:Name="tabview" AddTabButtonClick="TabViewNewTab" TabCloseRequested="TabCloseTab" VerticalAlignment="Center" Grid.Row="1" Background="#FF2C2C2C">
+                <muxc:TabView.TabItems>
+                    <muxc:TabViewItem Header="Untitle">
+                        <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
+                            <TextBox AcceptsReturn="True" Height="1000" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
+                        </ScrollViewer>
+                    </muxc:TabViewItem>
+                </muxc:TabView.TabItems>
+            </muxc:TabView>
+        </StackPanel>
 
+        <!-- Footer Bar -->
         <Border VerticalAlignment="Bottom" Background="#FF2C2C2C" Grid.Row="2" Grid.Column="0" Width="10000" Height="25">
         </Border>
     </Grid>
