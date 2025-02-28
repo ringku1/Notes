@@ -42,9 +42,11 @@ namespace WinUIApp1
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
+            ActiveWindows.Add(m_window);
             m_window.Activate();
         }
 
         private Window? m_window;
+        static public List<Window> ActiveWindows = new List<Window>();
     }
 }

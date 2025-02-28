@@ -8,193 +8,194 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="WinUIApp1">
-    <!--
-    -->
-    <Grid Background="Black">
+
+
+    <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" MinHeight="200"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" MinWidth="153"/>
         </Grid.ColumnDefinitions>
 
         <!-- Top Navigation Bar (Merged both Borders into a Single One) -->
-        <Border Background="#FF2C2C2C" Grid.Row="0" Grid.Column="0">
+        <Border Background="#FF2C2C2C" Grid.Row="0" Grid.Column="0" MinWidth="410">
+            <!--#FF2C2C2C-->
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <StackPanel Background="HotPink" Orientation="Horizontal" Grid.Column="0">
                     <MenuBar>
-                        <MenuBarItem Title = "File">
-                            <MenuFlyoutItem Text="New tab">
+                        <MenuBarItem Title = "File" VerticalAlignment="Top">
+                            <MenuFlyoutItem Text="New tab" Click="onNewTabClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="N"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="New window">
+                            <MenuFlyoutItem Text="New window" Click="onNewWindowClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control,Shift" Key="N"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Open">
+                            <MenuFlyoutItem Text="Open" Click="onOpenClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="O"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Save">
+                            <MenuFlyoutItem Text="Save" Click="onSaveClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="S"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Save as">
+                            <MenuFlyoutItem Text="Save as" Click="onSaveAsClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control,Shift" Key="S"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Save all">
+                            <MenuFlyoutItem Text="Save all" Click="onSaveAllClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Modifiers="Control, Windows" Key="S"/> <!--Modifiers = Ctrl+Alt-->
+                                    <KeyboardAccelerator Modifiers="Control, Menu" Key="S"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Page setup"/>
-                            <MenuFlyoutItem Text="Print">
+                            <MenuFlyoutItem Text="Page setup" Click="onPageSetUpClick"/>
+                            <MenuFlyoutItem Text="Print" Click="onPrintClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="P"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Close tab">
+                            <MenuFlyoutItem Text="Close tab" Click="onCloseTabClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="W"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Close window">
+                            <MenuFlyoutItem Text="Close window" Click="onCloseWindowClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control, Shift" Key="W"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Exit"/>
+                            <MenuFlyoutItem Text="Exit" Click="onExitClick"/>
                         </MenuBarItem>
 
-                        <MenuBarItem Title="Edit">
-                            <MenuFlyoutItem Text="Undo">
+                        <MenuBarItem Title="Edit" VerticalAlignment="Top">
+                            <MenuFlyoutItem Text="Undo" Click="onUndoClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="Z"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Cut">
+                            <MenuFlyoutItem Text="Cut" Click="onCutClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="X"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Copy">
+                            <MenuFlyoutItem Text="Copy" Click="onCopyClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="C"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Paste">
+                            <MenuFlyoutItem Text="Paste" Click="onPasteClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="V"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Delete">
+                            <MenuFlyoutItem Text="Delete" Click="onDeleteClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="Delete"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Search with Bing">
+                            <MenuFlyoutItem Text="Search with Bing" Click="onBingClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="E"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Find">
+                            <MenuFlyoutItem Text="Find" Click="onFindClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="F"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Find next">
+                            <MenuFlyoutItem Text="Find next" Click="onFindNextClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="F3"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Find previous">
+                            <MenuFlyoutItem Text="Find previous" Click="onFindPreviousClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Shift" Key="F3"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Replace">
+                            <MenuFlyoutItem Text="Replace" Click="onReplaceClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="H"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Go to">
+                            <MenuFlyoutItem Text="Go to" Click="onGoToClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="G"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Select all">
+                            <MenuFlyoutItem Text="Select all" Click="onSelectAllClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="A"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="Time/Date">
+                            <MenuFlyoutItem Text="Time/Date" Click="onTimeDateClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Key="F5"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Font"/>
+                            <MenuFlyoutItem Text="Font" Click="onFontClick"/>
                         </MenuBarItem>
 
-                        <MenuBarItem Title="View">
+                        <MenuBarItem Title="View" VerticalAlignment="Top">
                             <MenuFlyoutSubItem Text="Zoom">
-                                <MenuFlyoutItem Text="Zoom in">
+                                <MenuFlyoutItem Text="Zoom in" Click="onZoomInClick">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Modifiers="Control" Key="Add"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Zoom out">
+                                <MenuFlyoutItem Text="Zoom out" Click="onZoomOutClick">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Modifiers="Control" Key="Subtract"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Restore default zoom">
+                                <MenuFlyoutItem Text="Restore default zoom" Click="onResDefZoomClick">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Modifiers="Control" Key="0"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                 </MenuFlyoutItem>
-                                <ToggleMenuFlyoutItem Text="Status bar" IsChecked="True"/>
-                                <ToggleMenuFlyoutItem Text="Word wrap" IsChecked="True"/>
                             </MenuFlyoutSubItem>
+                            <ToggleMenuFlyoutItem Text="Status bar" IsChecked="True"/>
+                            <ToggleMenuFlyoutItem Text="Word wrap" IsChecked="True"/>
                         </MenuBarItem>
                     </MenuBar>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+                <StackPanel Background="BurlyWood" Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
                     <DropDownButton AutomationProperties.Name="AI">
                         <DropDownButton.Content>
-                            <FontIcon Glyph="&#F354;" FontSize="14" Foreground="White"/>
+                            <FontIcon Glyph="&#xF354;" FontSize="14" Foreground="White"/>
                         </DropDownButton.Content>
                         <DropDownButton.Flyout>
-                            <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutItem Text="Rewrite">
+                            <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                <MenuFlyoutItem Text="Rewrite" Click="onRewriteClick">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Modifiers="Control" Key="I"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Text="Make shorter"/>
-                                <MenuFlyoutItem Text="Make longer"/>
-                                <MenuFlyoutSubItem Text="Change tone">
+                                <MenuFlyoutItem Text="Make shorter" Click="onMakeShorterClick"/>
+                                <MenuFlyoutItem Text="Make longer"  Click="onMakeLongerClick"/>
+                                <MenuFlyoutSubItem Text="Change tone" FlowDirection="RightToLeft">
                                     <MenuFlyoutItem Text="Formal"/>
                                     <MenuFlyoutItem Text="Casual"/>
                                     <MenuFlyoutItem Text="Inspirational"/>
@@ -212,50 +213,76 @@
                         </DropDownButton.Flyout>
                     </DropDownButton>
 
-                    <FontIcon Glyph="&#xE77B;" FontSize="16" Margin="5" Foreground="White"/>
-                    <Button x:Name="Setting" Width="40" Height="30">
-                        <FontIcon Glyph="&#xE713;" FontSize="16" Foreground="White"/>
+                    <FontIcon Glyph="&#xE77B;" FontSize="14" Margin="5" Foreground="White"/>
+                    <Button x:Name="Setting">
+                        <FontIcon Glyph="&#xE713;" FontSize="14" Foreground="White"/>
                     </Button>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- Text Editor -->
-        <StackPanel Grid.Row="1" Grid.Column="0">
-            <TextBox Background="#FF272727" VerticalAlignment="Stretch"/>
-        </StackPanel>
+        <Border  Background="#FF272727" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TabView x:Name="RootTabView" VerticalAlignment="Stretch"
+                 AddTabButtonClick="RootTabView_AddTabButtonClick"
+                 TabCloseRequested="RootTabView_TabCloseRequested"
+                 CanTearOutTabs="True"
+                 TabTearOutWindowRequested="RootTabView_TabTearOutWindowRequested"
+                 TabTearOutRequested="RootTabView_TabTearOutRequested"
+                 ExternalTornOutTabsDropping="RootTabView_ExternalTornOutTabsDropping"
+                 ExternalTornOutTabsDropped="RootTabView_ExternalTornOutTabsDropped">
+                <TabViewItem x:Name="TabViewItem" Header="Untitled">
+                    <TabViewItem.Content>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                            <TextBox 
+                                Text="" 
+                                AcceptsReturn="True" 
+                                TextWrapping="Wrap" 
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"/>
+                        </ScrollViewer>
+                    </TabViewItem.Content>
+                </TabViewItem>
+            </TabView>
+        </Border>
 
         <!-- Bottom Status Bar -->
-        <StackPanel Orientation="Horizontal" Width="Auto" HorizontalAlignment="Stretch" Background="#FF1A2127" Grid.Row="2" Grid.Column="0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="250">
-                <CommandBar>
-                    <AppBarElementContainer>
-                        <TextBlock Text="ln, col" VerticalAlignment="Center" Foreground="White"/>
-                    </AppBarElementContainer>
-                    <AppBarSeparator />
-                    <AppBarElementContainer>
-                        <TextBlock Text="char" VerticalAlignment="Center" Foreground="White"/>
-                    </AppBarElementContainer>
-                </CommandBar>
-            </StackPanel>
-            
-            <StackPanel Width="Auto" HorizontalAlignment="Stretch"></StackPanel>
-            
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <CommandBar>
-                    <AppBarElementContainer>
-                        <TextBlock Text="100%" VerticalAlignment="Center" Foreground="White"/>
-                    </AppBarElementContainer>
-                    <AppBarSeparator />
-                    <AppBarElementContainer>
-                        <TextBlock Text="Windows (CRLF)" VerticalAlignment="Center" Foreground="White"/>
-                    </AppBarElementContainer>
-                    <AppBarSeparator />
-                    <AppBarElementContainer>
-                        <TextBlock Text="UTF-8" VerticalAlignment="Center" Foreground="White"/>
-                    </AppBarElementContainer>
-                </CommandBar>
-            </StackPanel>
-        </StackPanel>
+        <Border Background="#FF2C2C2C" Grid.Row="2" Grid.Column="0" MinWidth="410">
+            <!--#FF2C2C2C-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
+                    <TextBlock x:Name="LnColLabel" Text="Ln 1, col 1" FontSize="14" Margin="5"
+                               MinWidth="56" MaxWidth="156" TextAlignment="Center" HorizontalAlignment="Stretch" TextWrapping="Wrap">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="ln, col" />
+                        </ToolTipService.ToolTip>
+                    </TextBlock>
+                    <Border Width="1" Height="15" Background="DimGray" Margin="5,0"/>
+                    <TextBlock x:Name="CounterCharLabel" Text="0 characters" FontSize="14" Margin="5"
+                                MinWidth="80" MaxWidth="200" HorizontalAlignment="Stretch" TextAlignment="Left" TextWrapping="Wrap"/>
+                </StackPanel>
+                <!--<StackPanel Width="Auto" HorizontalAlignment="Stretch"></StackPanel>-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1">
+                    <Border Width="1" Height="15" Background="DimGray" Margin="5,0"/>
+                    <TextBlock x:Name="ZoomLabel" Text="100%" FontSize="14" Margin="5" 
+                                MinWidth="24" MaxWidth="50" HorizontalAlignment="Stretch" TextAlignment="Center">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="Zoom" />
+                        </ToolTipService.ToolTip>
+                    </TextBlock>
+                    <Border Width="1" Height="15" Background="DimGray" Margin="5,0"/>
+                    <TextBlock x:Name="LineEndingFormatLabel" Text="Windows(CRLF)" FontSize="14" Margin="5" 
+                               MinWidth="80" MaxWidth="150" HorizontalAlignment="Stretch" TextAlignment="Left" TextWrapping="Wrap"/>
+                    <Border Width="1" Height="15" Background="DimGray" Margin="5,0"/>
+                    <TextBlock x:Name="CharEncodingLabel" Text="UTF-8" FontSize="14" Margin="5" 
+                               MinWidth="50" MaxWidth="125" HorizontalAlignment="Stretch" TextAlignment="Left" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
