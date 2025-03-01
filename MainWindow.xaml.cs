@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Transactions;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-
+using WinUIApp1.Pages;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -16,91 +18,13 @@ namespace WinUIApp1
     public sealed partial class MainWindow : Window {
         public MainWindow() {
             this.InitializeComponent();
-        }
-        private void RootTabView_Loaded(object sender, RoutedEventArgs e) {
-            // This handler is invoked when the TabView is loaded
-
-            // Dynamically add tabs
-            AddNewTab();
-        }
-        // Add a new tab to the TabView.
-        private void RootTabView_AddTabButtonClick(TabView sender, object args) {
-            var existingTab = sender.TabItems.FirstOrDefault() as TabViewItem;
-            if (existingTab == null) {
-                return;
-            }
-            var newTab = new TabViewItem();
-            newTab.Header = "Untitled";
-            newTab.Content = CloneContent(existingTab.Content);
-            sender.TabItems.Add(newTab);
-            sender.SelectedItem = newTab;
-        }
-        // Remove the requested tab from the TabView.
-        private void RootTabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
-            sender.TabItems.Remove(args.Tab);
-            if (sender.TabItems.Count == 0) {
-                this.Close();
-            }
-        }
-        private void AddNewTab() {
-            // Add a TabItem programmatically
-            if(RootTabView.TabItems.Count > 0) {
-                var lastTab = RootTabView.TabItems.LastOrDefault() as TabViewItem;
-                if (lastTab != null) {
-                    var copyTab = new TabViewItem {
-                        Header = lastTab.Header, // Copy Header
-                        Content = CloneContent(lastTab.Content) // Clone Content
-                    };
-
-                    RootTabView.TabItems.Add(copyTab);
-                }
-            } else {
-                RootTabView.TabItems.Add(new TabViewItem {
-                    Header = "Untitled",
-                    Content = new ScrollViewer {
-                        VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                        HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-                        Content = new TextBox {
-                            AcceptsReturn = true,
-                            TextWrapping = TextWrapping.Wrap,
-                            VerticalAlignment = VerticalAlignment.Stretch,
-                            HorizontalAlignment = HorizontalAlignment.Stretch
-                        }
-                    }
-                });
-            }
-        }
-        private UIElement CloneContent(object content) {
-            if (content is ScrollViewer scrollViewer && scrollViewer.Content is TextBox textBox) {
-                return new ScrollViewer {
-                    VerticalScrollBarVisibility = scrollViewer.VerticalScrollBarVisibility,
-                    HorizontalScrollBarVisibility = scrollViewer.HorizontalScrollBarVisibility,
-                    Content = new TextBox {
-                        AcceptsReturn = textBox.AcceptsReturn,
-                        TextWrapping = textBox.TextWrapping,
-                        Text = "",
-                        VerticalAlignment = textBox.VerticalAlignment,
-                        HorizontalAlignment = textBox.HorizontalAlignment
-                    }
-                };
-            }
-
-            return new TextBlock { Text = "Cloned Tab (Unsupported Content Type)" }; // Fallback for unknown content
-        }
-
-        private void RootTabView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var selectedTab = RootTabView.SelectedItem as TabViewItem;
-            if (selectedTab != null) {
-                // Do something when the tab selection changes
-                string selectedTabHeader = selectedTab.Header?.ToString() ?? "Unnamed Tab";
-
-                // Example: Display selected tab name
-                Debug.WriteLine($"Selected Tab: {selectedTabHeader}");
+            this.TabViewFrame.Navigate(typeof(TabViewWindowPage));
+            if (TabViewFrame.Content is TabViewWindowPage tabPage) {
+                tabPage.SetTypeAndHandle(null);
             }
         }
 
         private void onNewTabClick(object sender, RoutedEventArgs e) {
-            AddNewTab();
         }
 
         private void onNewWindowClick(object sender, RoutedEventArgs e) {
@@ -222,36 +146,5 @@ namespace WinUIApp1
         private void onMakeLongerClick(object sender, RoutedEventArgs e) {
 
         }
-
-        private void RootTabView_TabTearOutWindowRequested(TabView sender, TabViewTabTearOutWindowRequestedEventArgs args) {
-
-        }
-
-        private void RootTabView_TabTearOutRequested(TabView sender, TabViewTabTearOutRequestedEventArgs args) {
-
-        }
-
-        private void RootTabView_ExternalTornOutTabsDropping(TabView sender, TabViewExternalTornOutTabsDroppingEventArgs args) {
-
-        }
-
-        private void RootTabView_ExternalTornOutTabsDropped(TabView sender, TabViewExternalTornOutTabsDroppedEventArgs args) {
-
-        }
-
-        /*
-* <TabViewItem x:Name="TabViewItem1" Header="Untitled">
-  <TabViewItem.Content>
-      <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-          <TextBox 
-              Text="" 
-              AcceptsReturn="True" 
-              TextWrapping="Wrap" 
-              VerticalAlignment="Stretch"
-              HorizontalAlignment="Stretch"/>
-      </ScrollViewer>
-  </TabViewItem.Content>
-</TabViewItem>
-*/
     }
 }

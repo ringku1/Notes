@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using NotePadCopy;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -39,14 +40,12 @@ namespace WinUIApp1
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-        {
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) {
             m_window = new MainWindow();
-            ActiveWindows.Add(m_window);
+            WindowHelper.TrackWindow(m_window);
             m_window.Activate();
         }
 
         private Window? m_window;
-        static public List<Window> ActiveWindows = new List<Window>();
     }
 }

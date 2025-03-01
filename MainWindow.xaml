@@ -13,15 +13,18 @@
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*" MinHeight="200"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="153"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        
+        <!--TabViewWindowPage.xaml-->
+        <Frame x:Name="TabViewFrame"/>
 
         <!-- Top Navigation Bar (Merged both Borders into a Single One) -->
-        <Border Background="#FF2C2C2C" Grid.Row="0" Grid.Column="0" MinWidth="410">
+        <Border Background="#FF2C2C2C">
             <!--#FF2C2C2C-->
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -222,32 +225,9 @@
         </Border>
 
         <!-- Text Editor -->
-        <Border  Background="#FF272727" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <TabView x:Name="RootTabView" VerticalAlignment="Stretch"
-                 AddTabButtonClick="RootTabView_AddTabButtonClick"
-                 TabCloseRequested="RootTabView_TabCloseRequested"
-                 CanTearOutTabs="True"
-                 TabTearOutWindowRequested="RootTabView_TabTearOutWindowRequested"
-                 TabTearOutRequested="RootTabView_TabTearOutRequested"
-                 ExternalTornOutTabsDropping="RootTabView_ExternalTornOutTabsDropping"
-                 ExternalTornOutTabsDropped="RootTabView_ExternalTornOutTabsDropped">
-                <TabViewItem x:Name="TabViewItem" Header="Untitled">
-                    <TabViewItem.Content>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                            <TextBox 
-                                Text="" 
-                                AcceptsReturn="True" 
-                                TextWrapping="Wrap" 
-                                VerticalAlignment="Stretch"
-                                HorizontalAlignment="Stretch"/>
-                        </ScrollViewer>
-                    </TabViewItem.Content>
-                </TabViewItem>
-            </TabView>
-        </Border>
 
         <!-- Bottom Status Bar -->
-        <Border Background="#FF2C2C2C" Grid.Row="2" Grid.Column="0" MinWidth="410">
+        <Border Background="#FF2C2C2C">
             <!--#FF2C2C2C-->
             <Grid>
                 <Grid.ColumnDefinitions>
