@@ -95,8 +95,12 @@ namespace WinUIApp1
             if (file != null)
             {
                 string fileContent = await FileIO.ReadTextAsync(file);
+
                 TabViewNewTab(tabview, sender);
-                FileContentTextBox.Text = fileContent;
+                var newTab = tabview.TabItems.Last() as TabViewItem;
+                var scrollViewer = newTab.Content as ScrollViewer;
+                var textBox = scrollViewer.Content as TextBox;
+                textBox.Text = fileContent;
             }
         }
 
