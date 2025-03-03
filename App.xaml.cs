@@ -33,7 +33,7 @@ namespace WinUIApp1
         }
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            var m_window = new MainWindow();
+            m_window = new MainWindow();
             ActiveWindows.Add(m_window);
             m_window.Activate();
         }
