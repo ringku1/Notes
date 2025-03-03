@@ -95,6 +95,48 @@ namespace WinUIApp1
             }
         }
 
+        private async void SaveFile_Click(object sender, RoutedEventArgs e)
+        {
+            // Get the selected tab
+            if (tabview.SelectedItem is Microsoft.UI.Xaml.Controls.TabViewItem selectedTab)
+            {
+                // Get the TextBox inside the tab
+                if (selectedTab.Content is ScrollViewer scrollViewer && scrollViewer.Content is TextBox textBox)
+                {
+                    string fileContent = textBox.Text;
+                    string fileName = selectedTab.Header.ToString();
+
+                    StorageFile file;
+
+                    if (fileName == "Untitled")
+                    {
+                        // If it's "Untitled", ask user where to save
+                        var savePicker = new FileSavePicker();
+                        var hwnd = WindowNative.GetWindowHandle(this);
+                        InitializeWithWindow.Initialize(savePicker, hwnd);
+
+                        savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                        savePicker.FileTypeChoices.Add("Text Document", new List<string>() { ".txt" });
+                        savePicker.SuggestedFileName = "NewFile";
+
+                        file = await savePicker.PickSaveFileAsync();
+                        if (file == null) return; // User canceled the save operation
+
+                        // Update the tab name
+                        selectedTab.Header = file.Name;
+                    }
+                    else
+                    {
+                        // If file has a name, get it from local storage
+                        file = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                    }
+
+                    // Save the file
+                    await FileIO.WriteTextAsync(file, fileContent);
+                }
+            }
+        }
+
         private void fileOnClick(object sender, RoutedEventArgs e)
         {
             var newTabItem = new MenuFlyoutItem { Text = "New Tab", Width = 250 };
@@ -112,7 +154,7 @@ namespace WinUIApp1
             openItem.Click += (s, args) => { OpenFilePicker_Click(s, args); };
 
             var saveItem = new MenuFlyoutItem { Text = "Save", Width = 250 };
-            saveItem.Click += (s, args) => { ShowInfoDialog(s, args); };
+            saveItem.Click += (s, args) => { SaveFile_Click(s, args); };
 
             var saveAsItem = new MenuFlyoutItem { Text = "Save as", Width = 250 };
             saveAsItem.Click += (s, args) => { ShowInfoDialog(s, args); };
