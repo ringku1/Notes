@@ -12,17 +12,17 @@
 
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="32"/>
             <!-- Row for TabView -->
             <RowDefinition Height="*"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Top Navigation Bar (Merged both Borders into a Single One) -->
-        <Border Background="#FF2C2C2C" Height="32" Grid.Row="0">
+        <Border Background="#FF2C2C2C" Grid.Row="0">
             <!--#FF2C2C2C-->
             <Grid>
                 <Grid.ColumnDefinitions>
