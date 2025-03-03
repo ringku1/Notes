@@ -13,6 +13,9 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Graphics.Printing3D;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -78,6 +81,25 @@ namespace WinUIApp1
             sender.TabItems.Remove(args.Tab);
         }
 
+        private async void OpenFilePicker_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new FileOpenPicker();
+            var hwnd = WindowNative.GetWindowHandle(this);
+            InitializeWithWindow.Initialize(picker, hwnd);
+
+            picker.ViewMode = PickerViewMode.List;
+            picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            picker.FileTypeFilter.Add(".txt");
+
+            StorageFile file = await picker.PickSingleFileAsync();
+            if (file != null)
+            {
+                string fileContent = await FileIO.ReadTextAsync(file);
+                TabViewNewTab(tabview, sender);
+                FileContentTextBox.Text = fileContent;
+            }
+        }
+
         private void fileOnClick(object sender, RoutedEventArgs e)
         {
             var newTabItem = new MenuFlyoutItem { Text = "New Tab", Width = 250 };
@@ -96,7 +118,7 @@ namespace WinUIApp1
             };
 
             var openItem = new MenuFlyoutItem { Text = "Open", Width = 250 };
-            openItem.Click += (s, args) => { ShowInfoDialog(s, args); };
+            openItem.Click += (s, args) => { OpenFilePicker_Click(s, args); };
 
             var saveItem = new MenuFlyoutItem { Text = "Save", Width = 250 };
             saveItem.Click += (s, args) => { ShowInfoDialog(s, args); };

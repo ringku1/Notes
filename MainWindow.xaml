@@ -65,7 +65,7 @@
                 <muxc:TabView.TabItems>
                     <muxc:TabViewItem Header="Untitle">
                         <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
-                            <TextBox AcceptsReturn="True" Height="1000" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
+                            <TextBox x:Name="FileContentTextBox" AcceptsReturn="True" Height="1000" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
                         </ScrollViewer>
                     </muxc:TabViewItem>
                 </muxc:TabView.TabItems>
