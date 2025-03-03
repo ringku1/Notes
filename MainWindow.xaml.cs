@@ -16,6 +16,7 @@ using Windows.Graphics.Printing3D;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using WinRT.Interop;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -55,30 +56,27 @@ namespace WinUIApp1
             await dialog.ShowAsync();
         }
 
-        private void TabViewNewTab(TabView sender, Object args)
+        private void TabViewNewTab(TabView sender, String header, String content = "")
         {
-            var Newtab = new TabViewItem
-            {
-                Header = "Untitled",
-                Content = new ScrollViewer
-                {
-                    HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+            Debug.WriteLine($"Original Content:\n{content}");
+            var Newtab = new TabViewItem {
+                Header = header,
+                Content = new ScrollViewer {
                     VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                    Content = new TextBox
-                    {
-                        IsEnabled = true,
-                        AcceptsReturn = true,
-                        Height = 1000
+                    HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    Content = new TextBox {
+                        AcceptsReturn = true, 
+                        TextWrapping = TextWrapping.Wrap, 
+                        HorizontalAlignment = HorizontalAlignment.Stretch, 
+                        VerticalAlignment = VerticalAlignment.Stretch 
                     }
                 },
                 IsClosable = true
             };
+            var textBox = ((Newtab.Content as ScrollViewer).Content as TextBox);
+            textBox.Text = content;
+            Debug.WriteLine($"File Content:\n{((Newtab.Content as ScrollViewer).Content as TextBox).Text.ToString()}");
             tabview.TabItems.Add(Newtab);
-        }
-
-        private void TabCloseTab(TabView sender, TabViewTabCloseRequestedEventArgs args)
-        {
-            sender.TabItems.Remove(args.Tab);
         }
 
         private async void OpenFilePicker_Click(object sender, RoutedEventArgs e)
@@ -95,15 +93,14 @@ namespace WinUIApp1
             if (file != null)
             {
                 string fileContent = await FileIO.ReadTextAsync(file);
-                TabViewNewTab(tabview, sender);
-                FileContentTextBox.Text = fileContent;
+                TabViewNewTab(tabview, file.Name, fileContent);
             }
         }
 
         private void fileOnClick(object sender, RoutedEventArgs e)
         {
             var newTabItem = new MenuFlyoutItem { Text = "New Tab", Width = 250 };
-            newTabItem.Click += (s, args) => { TabViewNewTab(tabview, sender); };
+            newTabItem.Click += (s, args) => { TabViewNewTab(tabview, "Untitled"); };
 
             var newWindowItem = new MenuFlyoutItem { Text = "New Window", Width = 250 };
             newWindowItem.Click += (s, args) =>
@@ -283,5 +280,13 @@ namespace WinUIApp1
         private MenuFlyout? viewMenuFlyout;
         private TabView? tabView;
         public static List<Window>? list_win { get; set; }
+
+        private void tabview_AddTabButtonClick(TabView sender, object args) {
+            TabViewNewTab(sender, "Untitled");
+        }
+
+        private void tabview_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
+            sender.TabItems.Remove(args.Tab);
+        }
     }
 }

@@ -60,17 +60,18 @@
         </Grid>
 
         <!-- TabView just below the first row -->
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-            <muxc:TabView x:Name="tabview" AddTabButtonClick="TabViewNewTab" TabCloseRequested="TabCloseTab" VerticalAlignment="Center" Grid.Row="1" Background="#FF2C2C2C">
-                <muxc:TabView.TabItems>
-                    <muxc:TabViewItem Header="Untitle">
-                        <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
-                            <TextBox x:Name="FileContentTextBox" AcceptsReturn="True" Height="1000" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
+        <Border Background="#FF2C2C2C" Grid.Row="1">
+            <TabView x:Name="tabview" AddTabButtonClick="tabview_AddTabButtonClick" TabCloseRequested="tabview_TabCloseRequested" VerticalAlignment="Stretch"
+                          TabWidthMode="Equal">
+                <TabView.TabItems>
+                    <TabViewItem Header="Untitled">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                            <TextBox AcceptsReturn="True" TextWrapping="Wrap"/>
                         </ScrollViewer>
-                    </muxc:TabViewItem>
-                </muxc:TabView.TabItems>
-            </muxc:TabView>
-        </StackPanel>
+                    </TabViewItem>
+                </TabView.TabItems>
+            </TabView>
+        </Border>
 
         <!-- Footer Bar -->
         <Border VerticalAlignment="Bottom" Background="#FF2C2C2C" Grid.Row="2" Grid.Column="0" Width="10000" Height="25">
