@@ -79,8 +79,7 @@ namespace WinUIApp1
             tabview.TabItems.Add(Newtab);
         }
 
-        private async void OpenFilePicker_Click(object sender, RoutedEventArgs e)
-        {
+        private async void OpenFilePicker_Click(object sender, RoutedEventArgs e) {
             var picker = new FileOpenPicker();
             var hwnd = WindowNative.GetWindowHandle(this);
             InitializeWithWindow.Initialize(picker, hwnd);
@@ -90,8 +89,7 @@ namespace WinUIApp1
             picker.FileTypeFilter.Add(".txt");
 
             StorageFile file = await picker.PickSingleFileAsync();
-            if (file != null)
-            {
+            if (file != null) {
                 string fileContent = await FileIO.ReadTextAsync(file);
                 TabViewNewTab(tabview, file.Name, fileContent);
             }
