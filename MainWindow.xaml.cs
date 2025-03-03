@@ -103,12 +103,8 @@ namespace WinUIApp1
             var newWindowItem = new MenuFlyoutItem { Text = "New Window", Width = 250 };
             newWindowItem.Click += (s, args) =>
             {
-                var newWindow = new MainWindow();
-                if(list_win == null)
-                {
-                    list_win = new List<Window>();
-                }
-                list_win.Add(newWindow);
+                Window newWindow = new MainWindow();
+                App.ActiveWindows.Add(newWindow);
                 newWindow.Activate();
             };
 
@@ -131,7 +127,12 @@ namespace WinUIApp1
             printItem.Click += (s, args) => { ShowInfoDialog(s, args); };
 
             var closeTabItem = new MenuFlyoutItem { Text = "Close tab", Width = 250 };
-            closeTabItem.Click += (s, args) => { ShowInfoDialog(s, args); };
+            closeTabItem.Click += (s, args) => {
+                tabview.TabItems.Remove(tabview.TabItems.LastOrDefault());
+                if(tabview.TabItems.Count == 0) {
+                    this.Close();
+                }
+            };
 
             var closeWindowItem = new MenuFlyoutItem { Text = "Close window", Width = 250 };
             closeWindowItem.Click += (s, args) => { this.Close(); };
@@ -264,10 +265,10 @@ namespace WinUIApp1
         }
         private void CloseAllWindows()
         {
-            if (list_win!=null)
-            {
-            list_win.Clear();
+            foreach (var window in App.ActiveWindows) {
+                window.Close();
             }
+
             Application.Current.Exit();
         }
 
@@ -276,8 +277,6 @@ namespace WinUIApp1
         private MenuFlyout? fileMenuFlyout;
         private MenuFlyout? editMenuFlyout;
         private MenuFlyout? viewMenuFlyout;
-        private TabView? tabView;
-        public static List<Window>? list_win { get; set; }
 
         private void tabview_AddTabButtonClick(TabView sender, object args) {
             TabViewNewTab(sender, "Untitled");
@@ -285,6 +284,9 @@ namespace WinUIApp1
 
         private void tabview_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
             sender.TabItems.Remove(args.Tab);
+            if(sender.TabItems.Count == 0) {
+                this.Close();
+            }
         }
     }
 }

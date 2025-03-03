@@ -33,10 +33,24 @@ namespace WinUIApp1
         }
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            MainWindow.list_win = new List<Window>();
             var m_window = new MainWindow();
+            ActiveWindows.Add(m_window);
             m_window.Activate();
-            MainWindow.list_win.Add(m_window);
+        }
+
+        private Window? m_window;
+        static public List<Window> ActiveWindows { get { return _activeWindows; } }
+        static private List<Window> _activeWindows = new List<Window>();
+
+        static public Window? GetWindowForElement(UIElement element) {
+            if (element.XamlRoot != null) {
+                foreach (Window window in _activeWindows) {
+                    if (element.XamlRoot == window.Content.XamlRoot) {
+                        return window;
+                    }
+                }
+            }
+            return null;
         }
     }
 }
