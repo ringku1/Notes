@@ -17,9 +17,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
         <!-- Top Navigation Bar (Merged both Borders into a Single One) -->
         <Border Background="#FF2C2C2C" Grid.Row="0">
@@ -227,9 +224,9 @@
             <TabView x:Name="tabview" AddTabButtonClick="tabview_AddTabButtonClick" TabCloseRequested="tabview_TabCloseRequested" VerticalAlignment="Stretch"
                           TabWidthMode="Equal">
                 <TabView.TabItems>
-                    <TabViewItem Header="Untitled">
+                    <TabViewItem Header="Untitled" Tag="Untitled.txt">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                            <TextBox AcceptsReturn="True" TextWrapping="Wrap"/>
+                            <TextBox AcceptsReturn="True" TextWrapping="Wrap" TextChanged="TextBox_TextChanged"/>
                         </ScrollViewer>
                     </TabViewItem>
                 </TabView.TabItems>
@@ -237,7 +234,7 @@
         </Border>
 
         <!-- Footer Bar -->
-        <Border VerticalAlignment="Bottom" Background="#FF2C2C2C" Grid.Row="2" Grid.Column="0" Width="10000" Height="25">
+        <Border VerticalAlignment="Bottom" Background="#FF2C2C2C" Grid.Row="2" Width="10000" Height="25">
         </Border>
     </Grid>
 </Window>

@@ -1,18 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Threading.Tasks;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Graphics.Printing3D;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using WinRT.Interop;
@@ -35,7 +27,6 @@ namespace WinUIApp1
             {
                 mainRoot = this.Content.XamlRoot;
             }
-
         }
 
         private async void ShowInfoDialog(object sender, RoutedEventArgs e)
@@ -56,36 +47,36 @@ namespace WinUIApp1
             await dialog.ShowAsync();
         }
 
-        private UIElement TabViewNewTab(TabView sender, String header, String content = "")
-        {
-            Debug.WriteLine($"Original Content:\n{content}");
-            var Newtab = new TabViewItem {
+        private UIElement TabViewNewTab(String header, String content = "") {
+            var textBox = new TextBox {
+                AcceptsReturn = true,
+                TextWrapping = TextWrapping.Wrap
+            };
+
+            var newTab = new TabViewItem {
                 Header = header,
                 Content = new ScrollViewer {
                     VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                     HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-                    Content = new TextBox {
-                        AcceptsReturn = true, 
-                        TextWrapping = TextWrapping.Wrap, 
-                        HorizontalAlignment = HorizontalAlignment.Stretch, 
-                        VerticalAlignment = VerticalAlignment.Stretch 
-                    }
+                    Content = textBox
                 },
-                //IsClosable = true
             };
-            var textBox = ((Newtab.Content as ScrollViewer).Content as TextBox);
+
             textBox.Text = content;
-            Debug.WriteLine($"File Content:\n{((Newtab.Content as ScrollViewer).Content as TextBox).Text.ToString()}");
-            tabview.TabItems.Add(Newtab);
-            tabview.SelectedItem = Newtab;
             SetIsTextModified(textBox, false);
             SetIsTextSaved(textBox, false);
-            // Optionally subscribe to the TextChanged event to track modifications
-            textBox.TextChanged += (s, e) => { SetIsTextModified(textBox, true); };
-            return Newtab;
+
+            // Attach TextChanged event to track modifications
+            textBox.TextChanged += TextBox_TextChanged;
+            
+            tabview.TabItems.Add(newTab);
+            newTab.Tag = "Untitled.txt"; // Path is not defined
+            tabview.SelectedItem = newTab;
+
+            return newTab;
         }
 
-        private async void OpenExistingFile(object sender, RoutedEventArgs e) {
+        private async Task OpenExistingFile(object sender, RoutedEventArgs e) {
             var picker = new FileOpenPicker();
             var hwnd = WindowNative.GetWindowHandle(this);
             InitializeWithWindow.Initialize(picker, hwnd);
@@ -97,19 +88,21 @@ namespace WinUIApp1
             StorageFile file = await picker.PickSingleFileAsync();
             if (file != null) {
                 string fileContent = await FileIO.ReadTextAsync(file);
-                TabViewItem openTab = (TabViewItem)TabViewNewTab(tabview, file.Name, fileContent);
+                TabViewItem openTab = (TabViewItem)TabViewNewTab(file.Name, fileContent);
                 openTab.Tag = file.Path;
-                SetIsTextSaved(((openTab.Content as ScrollViewer).Content as TextBox), true);
+                var textBox = GetChildTextBox(openTab);
+                if (textBox != null) {
+                    SetIsTextModified(textBox, false);
+                    SetIsTextSaved(textBox, true);
+                }
             }
         }
-        private async void SaveAsFile(TabViewItem saveTab) {
-            if (saveTab == null)
+        private async Task SaveAsFileAsync(TabViewItem saveTab) {
+            Debug.WriteLine($"saveTab Name: {saveTab.Header.ToString()}");
+            var textBox = GetChildTextBox(saveTab);
+            if (saveTab == null || textBox == null) {
                 return;
-
-            // Get the TextBox inside the saveTab
-            var textBox = ((saveTab.Content as ScrollViewer)?.Content as TextBox);
-            if (textBox == null)
-                return;
+            }
 
             // File Save Picker
             var picker = new FileSavePicker();
@@ -126,18 +119,17 @@ namespace WinUIApp1
                 // Write the TextBox content to file
                 await FileIO.WriteTextAsync(file, textBox.Text);
 
-                // Update the tab (if needed, to mark it as saved)
-                saveTab.Header = file.Name; // Update Tab title
-                saveTab.Tag = file.Path; // Update Tab tag
-                SetIsTextModified(textBox, false); // Reset modification flag if using a dependency property
+                saveTab.Header = file.Name;
+                saveTab.Tag = file.Path;
+                SetIsTextModified(textBox, false);
+                if (!GetIsTextSaved(textBox))
+                    SetIsTextSaved(textBox, true);
             }
         }
-        private async void Save(TabViewItem saveTab) {
-            if (saveTab == null) {
-                return;
-            }
-            var textBox = ((saveTab.Content as ScrollViewer)?.Content as TextBox);
-            if(textBox == null) {
+        private async Task SaveAsync(TabViewItem saveTab) {
+            Debug.WriteLine($"saveTab Name:\n{saveTab.Header.ToString()}");
+            var textBox = GetChildTextBox(saveTab);
+            if (saveTab == null || textBox == null) {
                 return;
             }
 
@@ -145,11 +137,8 @@ namespace WinUIApp1
                 try {
                     StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
 
-                    // Write the updated text to the file
                     await FileIO.WriteTextAsync(file, textBox.Text);
                     Debug.WriteLine($"File updated: {filePath}");
-
-                    // Mark tab as not modified (if using a flag)
                     SetIsTextModified(textBox, false);
                 } catch (Exception ex) {
                     Debug.WriteLine($"Error updating file: {ex.Message}");
@@ -157,26 +146,29 @@ namespace WinUIApp1
             }
         }
 
-        private void SaveExistingFile(TabViewItem saveTab) {
-            if (saveTab == null) {
+        private async Task SaveExistingFileAsync(TabViewItem saveTab) {
+            Debug.WriteLine($"saveTab Name:\n{saveTab.Header.ToString()}");
+            var textBox = GetChildTextBox(saveTab);
+            if (saveTab == null || textBox == null) {
                 return;
             }
 
-            var textBox = ((saveTab.Content as ScrollViewer)?.Content as TextBox);
             if (!GetIsTextSaved(textBox)) {
-                SaveAsFile(saveTab);
-                SetIsTextSaved(textBox, true);
+                await SaveAsFileAsync(saveTab);
+                //SetIsTextSaved(textBox, true);
             } else if (GetIsTextModified(textBox)) {
-                Save(saveTab);
+                await SaveAsync(saveTab);
+            } else {
+                Debug.WriteLine($"GetIsTextModified(saveTab) = :{GetIsTextModified(saveTab)}");
             }
         }
 
-        private TabView? GetParentTabView(TabViewItem tab) {
-            DependencyObject current = tab;
+        private T? GetParent<T>(DependencyObject child) where T : DependencyObject {
+            DependencyObject current = child;
 
             while (current != null) {
-                if (current is TabView tabView) {
-                    return tabView;
+                if (current is T parent) {
+                    return parent;
                 }
 
                 current = VisualTreeHelper.GetParent(current);
@@ -185,52 +177,62 @@ namespace WinUIApp1
             return null;
         }
 
-        private XamlRoot? mainRoot;
-        private MenuFlyout? fileMenuFlyout;
-        private MenuFlyout? editMenuFlyout;
-        private MenuFlyout? viewMenuFlyout;
-
-        // Define a custom dependency property to track text modification
-        public static readonly DependencyProperty IsTextModifiedProperty =
-            DependencyProperty.RegisterAttached(
-                "IsTextModified", typeof(bool), typeof(MainWindow),
-                new PropertyMetadata(false));
-
-        public static void SetIsTextModified(UIElement element, bool value) {
-            element.SetValue(IsTextModifiedProperty, value);
-        }
-
-        public static bool GetIsTextModified(UIElement element) {
-            return (bool)element.GetValue(IsTextModifiedProperty);
-        }
-        // Define a custom dependency property to track whether the text has been saved
-        public static readonly DependencyProperty IsTextSavedProperty =
-            DependencyProperty.RegisterAttached(
-                "IsTextSaved", typeof(bool), typeof(MainWindow),
-                new PropertyMetadata(false));
-
-        public static void SetIsTextSaved(UIElement element, bool value) {
-            element.SetValue(IsTextSavedProperty, value);
-        }
-
-        public static bool GetIsTextSaved(UIElement element) {
-            return (bool)element.GetValue(IsTextSavedProperty);
+        private TextBox? GetChildTextBox(TabViewItem parent) {
+            if(parent.Content == null)
+                return null;
+            return (parent.Content as ScrollViewer)?.Content as TextBox;
         }
 
         // Event handlers for the TabView
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e) {
+            if(sender is TextBox textBox) {
+                if (!GetIsTextModified(textBox)) {
+                    SetIsTextModified(textBox, true);
+                }
+            } else {
+                Debug.WriteLine("Caller was unknown.");
+            }
+        }
         private void tabview_AddTabButtonClick(TabView sender, object args) {
-            TabViewNewTab(sender, "Untitled");
+            TabViewNewTab("Untitled");
         }
 
-        private void tabview_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
-            sender.TabItems.Remove(args.Tab);
+        private async void tabview_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
+            if (GetChildTextBox(args.Tab) is TextBox textBox) {
+                if (!GetIsTextSaved(textBox) && textBox.Text == "" || !GetIsTextModified(textBox)) {
+                    sender.TabItems.Remove(args.Tab);
+                } else {
+                    if (mainRoot == null) {
+                        mainRoot = this.Content.XamlRoot;
+                    }
+
+                    ContentDialog dialog = new ContentDialog {
+                        Title = "Notepad",
+                        Content = $"Do you want to save changes to {args.Tab.Tag}?",
+                        PrimaryButtonText = "Save",
+                        SecondaryButtonText = "Don't save",
+                        CloseButtonText = "Cancel",
+                        XamlRoot = mainRoot
+                    };
+
+                    ContentDialogResult result = await dialog.ShowAsync();
+                    if (result == ContentDialogResult.Primary) {
+                        await SaveExistingFileAsync(args.Tab);
+                        if(GetIsTextSaved(textBox))
+                            sender.TabItems.Remove(args.Tab);
+                    } else if (result == ContentDialogResult.Secondary) {
+                        sender.TabItems.Remove(args.Tab);
+                    }
+                }
+            }
+
             if(sender.TabItems.Count == 0) {
                 this.Close();
             }
         }
 
         // Event handler for the MainWindow
-        private void onNewTabClick(object sender, RoutedEventArgs e) { TabViewNewTab(tabview, "Untitled"); }
+        private void onNewTabClick(object sender, RoutedEventArgs e) { TabViewNewTab("Untitled"); }
 
         private void onNewWindowClick(object sender, RoutedEventArgs e) {
             Window newWindow = new MainWindow();
@@ -238,18 +240,18 @@ namespace WinUIApp1
             newWindow.Activate();
         }
 
-        private void onOpenClick(object sender, RoutedEventArgs e) { OpenExistingFile(sender, e); }
+        private async void onOpenClick(object sender, RoutedEventArgs e) { await OpenExistingFile(sender, e); }
 
-        private void onSaveClick(object sender, RoutedEventArgs e) { SaveExistingFile((TabViewItem)tabview.SelectedItem); }
+        private async void onSaveClick(object sender, RoutedEventArgs e) { await SaveExistingFileAsync((TabViewItem)tabview.SelectedItem); }
 
-        private void onSaveAsClick(object sender, RoutedEventArgs e) { SaveAsFile((TabViewItem)tabview.SelectedItem); }
+        private async void onSaveAsClick(object sender, RoutedEventArgs e) { await SaveAsFileAsync((TabViewItem)tabview.SelectedItem); }
 
-        private void onSaveAllClick(object sender, RoutedEventArgs e) {
+        private async void onSaveAllClick(object sender, RoutedEventArgs e) {
             if (tabview == null) {
                 return;
             }
             foreach (TabViewItem tab in tabview.TabItems) {
-                SaveExistingFile(tab);
+                await SaveExistingFileAsync(tab);
             }
         }
 
@@ -262,7 +264,7 @@ namespace WinUIApp1
         }
 
         private void onCloseTabClick(object sender, RoutedEventArgs e) {
-            tabview.TabItems.Remove(tabview.TabItems.LastOrDefault());
+            tabview.TabItems.Remove(tabview.SelectedItem);
             if (tabview.TabItems.Count == 0) {
                 this.Close();
             }
@@ -356,6 +358,35 @@ namespace WinUIApp1
 
         private void onMakeLongerClick(object sender, RoutedEventArgs e) {
 
+        }
+
+        // User defined properties
+        private XamlRoot? mainRoot;
+        
+        public static readonly DependencyProperty IsTextModifiedProperty =
+            DependencyProperty.RegisterAttached(
+                "IsTextModified", typeof(bool), typeof(MainWindow),
+                new PropertyMetadata(false));
+
+        public static void SetIsTextModified(UIElement element, bool value) {
+            element.SetValue(IsTextModifiedProperty, value);
+        }
+
+        public static bool GetIsTextModified(UIElement element) {
+            return (bool)element.GetValue(IsTextModifiedProperty);
+        }
+
+        public static readonly DependencyProperty IsTextSavedProperty =
+            DependencyProperty.RegisterAttached(
+                "IsTextSaved", typeof(bool), typeof(MainWindow),
+                new PropertyMetadata(false));
+
+        public static void SetIsTextSaved(UIElement element, bool value) {
+            element.SetValue(IsTextSavedProperty, value);
+        }
+
+        public static bool GetIsTextSaved(UIElement element) {
+            return (bool)element.GetValue(IsTextSavedProperty);
         }
     }
 }
