@@ -184,7 +184,7 @@ namespace WinUIApp1
         }
 
         // Event handlers for the TabView
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e) {
+        /*private void TextBox_TextChanged(object sender, TextChangedEventArgs e) {
             if(sender is TextBox textBox) {
                 if (!GetIsTextModified(textBox)) {
                     SetIsTextModified(textBox, true);
@@ -192,7 +192,40 @@ namespace WinUIApp1
             } else {
                 Debug.WriteLine("Caller was unknown.");
             }
+        }*/
+        private void TextBox_TextChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                int totalChars = textBox.Text.Length;
+                CounterCharLabel.Text = $"{totalChars} characters"; // Update character count
+            }
         }
+
+        private void TextBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                int selectionStart = textBox.SelectionStart;
+                string text = textBox.Text;
+
+                // Count newlines before the cursor to determine line number
+                int line = text.Take(selectionStart).Count(c => c == '\n') + 1;
+
+                // Find the last newline before the cursor
+                int lastNewLine = text.LastIndexOf('\n', Math.Max(0, selectionStart - 1));
+
+                // Column calculation: If no previous newline is found, count from start
+                int col = (lastNewLine == -1) ? selectionStart + 1 : selectionStart - lastNewLine;
+
+                // Ensure the column count never goes below 1
+                col = Math.Max(col, 1);
+
+                LnColLabel.Text = $"Ln {line}, Col {col}";
+            }
+        }
+
+
         private void tabview_AddTabButtonClick(TabView sender, object args) {
             TabViewNewTab("Untitled");
         }
