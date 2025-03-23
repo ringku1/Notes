@@ -419,8 +419,22 @@ public sealed partial class MainPage : Page
         }
     }
 
-    private void onBingClick(object sender, RoutedEventArgs e) {
-
+    private async void onBingClick(object sender, RoutedEventArgs e)
+    {
+        var selectedTab = tabview.SelectedItem as TabViewItem;
+        if (selectedTab != null)
+        {
+            var textBox = GetChildTextBox(selectedTab);
+            if (textBox != null)
+            {
+                var selectedText = textBox.SelectedText;
+                if (!string.IsNullOrEmpty(selectedText))
+                {
+                    var uri = new Uri($"https://www.bing.com/search?q={Uri.EscapeDataString(selectedText)}");
+                    await Windows.System.Launcher.LaunchUriAsync(uri);
+                }
+            }
+        }
     }
 
     private void onFindClick(object sender, RoutedEventArgs e) {
