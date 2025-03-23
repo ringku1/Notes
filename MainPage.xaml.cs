@@ -404,8 +404,19 @@ public sealed partial class MainPage : Page
         }
     }
 
-    private void onDeleteClick(object sender, RoutedEventArgs e) {
-
+    private void onDeleteClick(object sender, RoutedEventArgs e)
+    {
+        var selectedTab = tabview.SelectedItem as TabViewItem;
+        if (selectedTab != null)
+        {
+            var textBox = GetChildTextBox(selectedTab);
+            if (textBox != null)
+            {
+                var selectionStart = textBox.SelectionStart;
+                textBox.Text = textBox.Text.Remove(selectionStart, textBox.SelectionLength);
+                textBox.SelectionStart = selectionStart;
+            }
+        }
     }
 
     private void onBingClick(object sender, RoutedEventArgs e) {
