@@ -320,8 +320,9 @@ public sealed partial class MainPage : Page
 
     }
 
-    private void onPrintClick(object sender, RoutedEventArgs e) {
-
+    private async void onPrintClick(object sender, RoutedEventArgs e)
+    {
+        
     }
 
     private void onCloseTabClick(object sender, RoutedEventArgs e) {
@@ -345,8 +346,23 @@ public sealed partial class MainPage : Page
         Application.Current.Exit();
     }
 
-    private void onUndoClick(object sender, RoutedEventArgs e) {
-
+    private void onUndoClick(object sender, RoutedEventArgs e)
+    {
+        var selectedTab = tabview.SelectedItem as TabViewItem;
+        if (selectedTab != null)
+        {
+            var textBox = GetChildTextBox(selectedTab);
+            if (textBox != null)
+            {
+                var words = textBox.Text.Split(new[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                if (words.Length > 0)
+                {
+                    var lastWord = words.Last();
+                    var newText = textBox.Text.Substring(0, textBox.Text.LastIndexOf(lastWord));
+                    textBox.Text = newText;
+                }
+            }
+        }
     }
 
     private void onCutClick(object sender, RoutedEventArgs e) {
