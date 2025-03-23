@@ -391,8 +391,17 @@ public sealed partial class MainPage : Page
         }
     }
 
-    private void onPasteClick(object sender, RoutedEventArgs e) {
-
+    private void onPasteClick(object sender, RoutedEventArgs e)
+    {
+        var selectedTab = tabview.SelectedItem as TabViewItem;
+        if (selectedTab != null)
+        {
+            var textBox = GetChildTextBox(selectedTab);
+            if (textBox != null)
+            {
+                textBox.PasteFromClipboard();
+            }
+        }
     }
 
     private void onDeleteClick(object sender, RoutedEventArgs e) {
