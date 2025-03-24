@@ -12,8 +12,6 @@ using Windows.Storage;
 using WinRT.Interop;
 using WinUIApp1.Model;
 using WinUIApp1.Helpers;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.ComponentModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,51 +21,41 @@ namespace WinUIApp1;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class MainPage : Page, INotifyPropertyChanged
+public sealed partial class MainPage : Page
 {
-    private string _userProfileImage = "Assets/default-pic.png";
-
-    public string UserProfileImage {
-        get => _userProfileImage;
-        set {
-            if (_userProfileImage != value) {
-                _userProfileImage = value;
-                OnPropertyChanged(nameof(UserProfileImage));
-            }
-        }
-    }
-    public event PropertyChangedEventHandler? PropertyChanged;
-    private void OnPropertyChanged(string propertyName) {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    public UserData? UserData { get; set; } = null;
     private MainWindow? m_window = null;
 
     public MainPage()
     {
         this.InitializeComponent();
+        LoadUserProfile();
+        this.DataContext = this;
     }
     protected override void OnNavigatedTo(NavigationEventArgs e) {
         base.OnNavigatedTo(e);
         m_window = e.Parameter as MainWindow;
-        LoadUserProfileImage();
     }
     //private void MainPage_Loaded(object sender, RoutedEventArgs e) {
     //    this.Loaded -= MainPage_Loaded;
     //}
 
-    private async void ShowInfoDialog(object sender, RoutedEventArgs e) {
-        ContentDialog dialog = new ContentDialog {
-            Title = "Information",
-            Content = "This is a open message.",
-            CloseButtonText = "OK",
-            XamlRoot = this.XamlRoot
-        };
+    //private async void ShowInfoDialog(object sender, RoutedEventArgs e) {
+    //    ContentDialog dialog = new ContentDialog {
+    //        Title = "Information",
+    //        Content = "This is a open message.",
+    //        CloseButtonText = "OK",
+    //        XamlRoot = this.XamlRoot
+    //    };
 
-        await dialog.ShowAsync();
-    }
-    private void LoadUserProfileImage() {
-        string userImagePath = "Assets/default-pic.png"; // Change this based on user settings
-        UserProfileImage = string.IsNullOrEmpty(userImagePath) ? "Assets/default-pic.png" : userImagePath;
+    //    await dialog.ShowAsync();
+    //}
+    private void LoadUserProfile() {
+        UserData = new UserData {
+            UserName = "Jahirul Islam",
+            UserEmail = "jahirulislam8265@outlook.com",
+            ProfileImage = "Assets/default-pic.png"
+        };
     }
 
     private UIElement TabViewNewTab(String header, String content = "") {
@@ -208,7 +196,7 @@ public sealed partial class MainPage : Page, INotifyPropertyChanged
             return null;
         return (parent.Content as ScrollViewer)?.Content as TextBox;
     }
-    static public async Task UpdateCursorPosition(TextBox textBox, TabData tabData) {
+    static public void UpdateCursorPosition(TextBox textBox, TabData tabData) {
         string textBeforeCursor = textBox.Text.Substring(0, textBox.SelectionStart);
 
         int ln = textBeforeCursor.Split(new[] { '\r', '\n' }, StringSplitOptions.None).Length;
@@ -253,20 +241,20 @@ public sealed partial class MainPage : Page, INotifyPropertyChanged
             }
         }
     }
-    private async void EditorTextBox_TextChanged(object sender, RoutedEventArgs e) {
+    private void EditorTextBox_TextChanged(object sender, RoutedEventArgs e) {
         if (sender is TextBox textBox && textBox.DataContext is TabData tabData) {
             if (!GetIsTextModified(textBox)) {
                 SetIsTextModified(textBox, true);
             }
             if (tabData != null) {
-                await UpdateCursorPosition(textBox, tabData);
+                UpdateCursorPosition(textBox, tabData);
             }
         }
     }
-    private async void EditorTextBox_SelectionChanged(object sender, RoutedEventArgs e) {
+    private void EditorTextBox_SelectionChanged(object sender, RoutedEventArgs e) {
         if (sender is TextBox textBox && textBox.DataContext is TabData tabData) {
             if (tabData != null) {
-                await UpdateCursorPosition(textBox, tabData);
+                UpdateCursorPosition(textBox, tabData);
             }
         }
     }

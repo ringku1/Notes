@@ -245,7 +245,7 @@
                         <Button.Content>
                             <Ellipse Height="24" Width="24" VerticalAlignment="Center">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{x:Bind UserProfileImage, Mode=OneWay}"/>
+                                    <ImageBrush ImageSource="{Binding UserData.ProfileImage, Mode=OneWay}"/>
                                 </Ellipse.Fill>
                             </Ellipse>
                         </Button.Content>
@@ -256,12 +256,12 @@
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="20" Margin="0 0 0 10">
                                         <Ellipse Height="64" Width="64">
                                             <Ellipse.Fill>
-                                                <ImageBrush ImageSource="{x:Bind UserProfileImage, Mode=OneWay}"/>
+                                                <ImageBrush ImageSource="{Binding UserData.ProfileImage, Mode=OneWay}"/>
                                             </Ellipse.Fill>
                                         </Ellipse>
                                         <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="Jahirul Islam" FontWeight="Bold" FontSize="14"/>
-                                            <TextBlock Text="Jahirulislam8265@outlook.com" FontSize="14"/>
+                                            <TextBlock Text="{Binding UserData.UserName}" FontWeight="Bold" FontSize="14"/>
+                                            <TextBlock Text="{Binding UserData.UserEmail}" FontSize="14"/>
                                         </StackPanel>
                                     </StackPanel>
 
