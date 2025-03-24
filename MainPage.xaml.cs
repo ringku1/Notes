@@ -12,6 +12,8 @@ using Windows.Storage;
 using WinRT.Interop;
 using WinUIApp1.Model;
 using WinUIApp1.Helpers;
+using Microsoft.UI.Xaml.Media.Imaging;
+using System.ComponentModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -21,9 +23,25 @@ namespace WinUIApp1;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class MainPage : Page
+public sealed partial class MainPage : Page, INotifyPropertyChanged
 {
+    private string _userProfileImage = "Assets/default-pic.png";
+
+    public string UserProfileImage {
+        get => _userProfileImage;
+        set {
+            if (_userProfileImage != value) {
+                _userProfileImage = value;
+                OnPropertyChanged(nameof(UserProfileImage));
+            }
+        }
+    }
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private void OnPropertyChanged(string propertyName) {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
     private MainWindow? m_window = null;
+
     public MainPage()
     {
         this.InitializeComponent();
@@ -31,10 +49,11 @@ public sealed partial class MainPage : Page
     protected override void OnNavigatedTo(NavigationEventArgs e) {
         base.OnNavigatedTo(e);
         m_window = e.Parameter as MainWindow;
+        LoadUserProfileImage();
     }
-    private void MainPage_Loaded(object sender, RoutedEventArgs e) {
-        this.Loaded -= MainPage_Loaded;
-    }
+    //private void MainPage_Loaded(object sender, RoutedEventArgs e) {
+    //    this.Loaded -= MainPage_Loaded;
+    //}
 
     private async void ShowInfoDialog(object sender, RoutedEventArgs e) {
         ContentDialog dialog = new ContentDialog {
@@ -45,6 +64,10 @@ public sealed partial class MainPage : Page
         };
 
         await dialog.ShowAsync();
+    }
+    private void LoadUserProfileImage() {
+        string userImagePath = "Assets/default-pic.png"; // Change this based on user settings
+        UserProfileImage = string.IsNullOrEmpty(userImagePath) ? "Assets/default-pic.png" : userImagePath;
     }
 
     private UIElement TabViewNewTab(String header, String content = "") {
@@ -269,12 +292,14 @@ public sealed partial class MainPage : Page
                 sender.TabItems.Remove(args.Tab);
             } else {
                 ContentDialog dialog = new ContentDialog {
+                    XamlRoot = this.XamlRoot,
+                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
                     Title = "Notepad",
-                    Content = $"Do you want to save changes to {args.Tab.Tag}?",
                     PrimaryButtonText = "Save",
                     SecondaryButtonText = "Don't save",
                     CloseButtonText = "Cancel",
-                    XamlRoot = this.XamlRoot
+                    DefaultButton = ContentDialogButton.Primary,
+                    Content = $"Do you want to save changes to {args.Tab.Tag}?"
                 };
 
                 ContentDialogResult result = await dialog.ShowAsync();
@@ -451,5 +476,9 @@ public sealed partial class MainPage : Page
 
     public static bool GetIsTextSaved(UIElement element) {
         return (bool)element.GetValue(IsTextSavedProperty);
+    }
+
+    private void OnSignOutClick(object sender, RoutedEventArgs e) {
+
     }
 }
