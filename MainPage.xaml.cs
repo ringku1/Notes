@@ -383,7 +383,13 @@ public sealed partial class MainPage : Page
     }
 
     private void onFindClick(object sender, RoutedEventArgs e) {
+        //// Get the position of the button or any other element you want the FindPage to be anchored to
+        //var position = UserProfileButton.TransformToVisual(MainGrid).TransformPoint(new Point(0, 0));
 
+        //// Adjust the Frame's position
+        //FindFrame.HorizontalOffset = position.X;
+        //FindFrame.VerticalOffset = position.Y;
+        FindFrame.Navigate(typeof(FindPage));
     }
 
     private void onFindNextClick(object sender, RoutedEventArgs e) {

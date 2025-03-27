@@ -291,21 +291,32 @@
 
         <!-- TabView just below the first row -->
         <Border Background="#FF2C2C2C" Grid.Row="1">
-            <TabView x:Name="tabview" AddTabButtonClick="tabview_AddTabButtonClick" TabCloseRequested="tabview_TabCloseRequested"
+            <Grid>
+                <!-- TabView container for the editor tabs -->
+                <TabView x:Name="tabview" 
+                 AddTabButtonClick="tabview_AddTabButtonClick" 
+                 TabCloseRequested="tabview_TabCloseRequested"
                  SelectionChanged="tabview_SelectionChanged"
                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <TabView.TabItems>
-                    <TabViewItem Header="Untitled" Tag="Untitled.txt">
-                        <TabViewItem.DataContext>
-                            <model:TabData />
-                        </TabViewItem.DataContext>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                            <TextBox x:Name="EditorTextBox" AcceptsReturn="True" TextWrapping="Wrap"
-                                 TextChanged="EditorTextBox_TextChanged" SelectionChanged="EditorTextBox_SelectionChanged" Loaded="EditorTextBox_Loaded"/>
-                        </ScrollViewer>
-                    </TabViewItem>
-                </TabView.TabItems>
-            </TabView>
+                    <TabView.TabItems>
+                        <TabViewItem Header="Untitled" Tag="Untitled.txt">
+                            <TabViewItem.DataContext>
+                                <model:TabData />
+                            </TabViewItem.DataContext>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                <TextBox x:Name="EditorTextBox" AcceptsReturn="True" TextWrapping="Wrap"
+                                 TextChanged="EditorTextBox_TextChanged" 
+                                 SelectionChanged="EditorTextBox_SelectionChanged" 
+                                 Loaded="EditorTextBox_Loaded"/>
+                            </ScrollViewer>
+                        </TabViewItem>
+                    </TabView.TabItems>
+                </TabView>
+
+                <!-- Frame to load the FindPage on top of the TabView content -->
+                <Frame x:Name="FindFrame" HorizontalAlignment="Center" VerticalAlignment="Top" 
+                    Width="300" Height="200" Margin="0,40,0,0" />
+            </Grid>
         </Border>
 
         <!-- Footer Bar -->
