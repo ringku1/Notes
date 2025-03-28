@@ -314,8 +314,7 @@
                 </TabView>
 
                 <!-- Frame to load the FindPage on top of the TabView content -->
-                <Frame x:Name="FindFrame" HorizontalAlignment="Center" VerticalAlignment="Top" 
-                    Width="300" Height="200" Margin="0,40,0,0" />
+                <Frame x:Name="FindFrame"/>
             </Grid>
         </Border>
 

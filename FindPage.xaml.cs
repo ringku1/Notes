@@ -28,10 +28,18 @@ public sealed partial class FindPage : Page
         this.InitializeComponent();
     }
 
+    private void OnToggleButtonClick(object sender, RoutedEventArgs e) {
+        if (ReplaceSection.Visibility == Visibility.Visible) {
+            ChevronIcon.Glyph = "&#xE70E;";
+            ReplaceSection.Visibility = Visibility.Collapsed;
+        } else {
+            ChevronIcon.Glyph = "&#xE70F;";
+            ReplaceSection.Visibility = Visibility.Visible;
+        }
+    }
     private void OnFindClick(object sender, RoutedEventArgs e) {
 
     }
-
     private void OnFindPreviousClick(object sender, RoutedEventArgs e) {
 
     }
@@ -44,6 +52,9 @@ public sealed partial class FindPage : Page
 
     }
 
+    private void OnCloseButtonClick(object sender, RoutedEventArgs e) {
+
+    }
     private void OnReplaceClick(object sender, RoutedEventArgs e) {
 
     }

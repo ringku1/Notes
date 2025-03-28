@@ -9,47 +9,88 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <!-- Command Bar (Find, Up/Down Arrows, Replace options) -->
-        <CommandBar VerticalAlignment="Top" HorizontalAlignment="Stretch" Background="LightGray">
-            <!-- Find section -->
-            <CommandBar.PrimaryCommands>
-                <AppBarButton Icon="Find" Label="Find" Click="OnFindClick" />
-                <AppBarButton Icon="Previous" Label="Previous" Click="OnFindPreviousClick" />
-                <AppBarButton Icon="Next" Label="Next" Click="OnFindNextClick" />
-            </CommandBar.PrimaryCommands>
+    <!-- Styles -->
+    <Page.Resources>
+        <Style TargetType="Grid">
+            <Setter Property="CornerRadius" Value="5"/>
+        </Style>
+        
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
 
-            <!-- More options, like "Replace" functionality -->
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Icon="More" Label="More" Click="OnMoreOptionsClick" />
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
 
-        <!-- Search Field, Replace Field, and Replace/Replace All -->
-        <StackPanel VerticalAlignment="Top" Margin="10, 50, 10, 10" Spacing="10">
-            <!-- Find Text -->
-            <TextBox x:Name="SearchBox" PlaceholderText="Search..." Width="300" Height="30" Margin="0, 0, 0, 10" />
+        <Style TargetType="FontIcon">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Page.Resources>
 
-            <!-- Replace Text Field -->
-            <TextBox x:Name="ReplaceBox" PlaceholderText="Replace with..." Width="300" Height="30" Margin="0, 0, 0, 10" />
+    <Grid Background="#FF282828" Width="390" VerticalAlignment="Top"
+        BorderBrush="{StaticResource SystemChromeGrayColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="38"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
 
-            <!-- Replace options dropdown -->
-            <DropDownButton x:Name="ReplaceOptionsButton" Content="Replace Options">
-                <DropDownButton.Flyout>
-                    <Flyout>
-                        <StackPanel>
-                            <Button Content="Replace" Click="OnReplaceClick" />
-                            <Button Content="Replace All" Click="OnReplaceAllClick" />
-                        </StackPanel>
-                    </Flyout>
-                </DropDownButton.Flyout>
-            </DropDownButton>
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-            <!-- Indicator for found text position (Up/Down arrows) -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" VerticalAlignment="Center">
-                <Button Content="↑" Width="30" Height="30" Click="OnFindPreviousClick" />
-                <Button Content="↓" Width="30" Height="30" Click="OnFindNextClick" />
+            <Button x:Name="ToggleButton" Width="30" Grid.Column="0" Click="OnToggleButtonClick"
+                      Margin="8 10 0 8" Background="Transparent" BorderBrush="Transparent">
+                <FontIcon x:Name="ChevronIcon" Glyph="&#xE70E;" Foreground="White"/>
+            </Button>
+
+            <StackPanel x:Name="FindSection" Orientation="Horizontal" Grid.Column="1" Padding="8 10 8 8" Spacing="10" VerticalAlignment="Center">
+                <TextBox x:Name="FindTextBox" PlaceholderText="Find" Width="172" Height="34" Foreground="White"
+                     BorderThickness="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                     />
+
+                <Button x:Name="SearchDown" Width="30" Click="OnFindNextClick"
+                        Background="Transparent" BorderBrush="Transparent">
+                    <FontIcon Glyph="&#xE74B;" Foreground="White"/>
+                </Button>
+
+                <Button x:Name="SearchUp" Width="30" Click="OnFindPreviousClick"
+                        Background="Transparent" BorderBrush="Transparent">
+                    <FontIcon Glyph="&#xE74A;" Foreground="White"/>
+                </Button>
+
+                <Button x:Name="MoreOptions" Width="30" Click="OnMoreOptionsClick"
+                        Background="Transparent" BorderBrush="Transparent">
+                    <FontIcon Glyph="&#xE9E9;" Foreground="White"/>
+                </Button>
+
+                <Button x:Name="CloseButton" Width="30" Click="OnCloseButtonClick"
+                        Background="Transparent" BorderBrush="Transparent">
+                    <FontIcon Glyph="&#xE711;" Foreground="White"/>
+                </Button>
             </StackPanel>
+        </Grid>
+
+        <StackPanel x:Name="ReplaceSection" Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Visibility="Collapsed" VerticalAlignment="Center"
+                HorizontalAlignment="Left" Padding="8 0 8 10" Spacing="9" Background="Transparent">
+            <TextBox x:Name="ReplaceTextBox" PlaceholderText="Replace" Width="135" Foreground="White"
+                 BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+            <Button x:Name="ReplaceButton" Content="Replace" Width="90" Height="34" Foreground="White" Click="OnReplaceClick"/>
+            <Button x:Name="ReplaceAllButton" Content="Replace All" Width="90" Height="34" Foreground="White" Click="OnReplaceAllClick"/>
         </StackPanel>
     </Grid>
 </Page>
