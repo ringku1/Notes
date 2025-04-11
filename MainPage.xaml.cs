@@ -31,6 +31,21 @@ public sealed partial class MainPage : Page
         this.InitializeComponent();
         LoadUserProfile();
         this.DataContext = this;
+        
+        FindReplaceBar.Loaded += (s, e) => {
+            // Access internal container
+            if (FindReplaceBar.Content is FrameworkElement content) {
+                var container = content.FindName("ShadowContainer") as FrameworkElement;
+
+                if (container != null) {
+                    // Set the Translation Z to "lift" the control (creates elevation)
+                    container.Translation = new System.Numerics.Vector3(0, 0, 32); // Z-elevation
+
+                    // Optional: make sure layout supports casting shadows
+                    Canvas.SetZIndex(FindReplaceBar, 10);
+                }
+            }
+        };
     }
     protected override void OnNavigatedTo(NavigationEventArgs e) {
         base.OnNavigatedTo(e);
@@ -386,10 +401,18 @@ public sealed partial class MainPage : Page
         //// Get the position of the button or any other element you want the FindPage to be anchored to
         //var position = UserProfileButton.TransformToVisual(MainGrid).TransformPoint(new Point(0, 0));
 
-        //// Adjust the Frame's position
+        //// Adjust the Frame's position 
         //FindFrame.HorizontalOffset = position.X;
         //FindFrame.VerticalOffset = position.Y;
-        FindFrame.Navigate(typeof(FindPage));
+        //FindFrame.Navigate(typeof(FindPage));
+        //FindPage.Visibility = Visibility.Visible;
+        //// Begin the slide-in animation
+        //Storyboard slideInStoryboard = (Storyboard)this.Resources["FindPageSlideIn"];
+        //slideInStoryboard.Begin();
+        //PopupRectangle.Translation += new Vector3(120, 50, 64);
+        if (FindReplaceBar.Visibility == Visibility.Collapsed) {
+            FindReplaceBar.Visibility = Visibility.Visible;
+        }
     }
 
     private void onFindNextClick(object sender, RoutedEventArgs e) {

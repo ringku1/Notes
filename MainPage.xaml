@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WinUIApp1"
     xmlns:model="using:WinUIApp1.Model"
+    xmlns:controls="using:WinUIApp1.Controls"
     xmlns:converter="using:WinUIApp1.Converter"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -292,7 +293,6 @@
         <!-- TabView just below the first row -->
         <Border Background="#FF2C2C2C" Grid.Row="1">
             <Grid>
-                <!-- TabView container for the editor tabs -->
                 <TabView x:Name="tabview" 
                  AddTabButtonClick="tabview_AddTabButtonClick" 
                  TabCloseRequested="tabview_TabCloseRequested"
@@ -312,9 +312,12 @@
                         </TabViewItem>
                     </TabView.TabItems>
                 </TabView>
-
-                <!-- Frame to load the FindPage on top of the TabView content -->
-                <Frame x:Name="FindFrame"/>
+                <!-- Layer 3: FindReplace UserControl overlay -->
+                <controls:FindReplace x:Name="FindReplaceBar"
+                              Visibility="Collapsed"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Top"
+                              Margin="0 20 0 0"/>
             </Grid>
         </Border>
 
