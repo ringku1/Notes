@@ -19,9 +19,7 @@ namespace WinUIApp1.Controls
                 ChevronIcon.Glyph = "\uE70D";
                 ReplaceSection.Visibility = Visibility.Visible;
             }
-        }
-        private void OnFindClick(object sender, RoutedEventArgs e) {
-
+            ToolTipService.SetToolTip(ToggledButton, (ReplaceSection.Visibility == Visibility.Visible? "Close replace options": "Open replace options"));
         }
         private void OnFindPreviousClick(object sender, RoutedEventArgs e) {
 
@@ -43,6 +41,10 @@ namespace WinUIApp1.Controls
         }
 
         private void OnReplaceAllClick(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void OnSearchIconClick(object sender, RoutedEventArgs e) {
 
         }
     }

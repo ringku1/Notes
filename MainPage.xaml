@@ -19,6 +19,18 @@
         <Style x:Key="FooterTextStyle" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Segoe UI"/>
         </Style>
+        <Style TargetType="TextBox">
+            <!-- Your Desired Properties -->
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#FF272727"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="IsSpellCheckEnabled" Value="True"/>
+            <Setter Property="SelectionHighlightColor" Value="#FF0078D7"/>
+        </Style>
     </Page.Resources>
 
     <Grid>
@@ -293,6 +305,10 @@
         <!-- TabView just below the first row -->
         <Border Background="#FF2C2C2C" Grid.Row="1">
             <Grid>
+                <Grid.Resources>
+                    <ThemeShadow x:Name="FindReplaceShadow"/>
+                </Grid.Resources>
+                
                 <TabView x:Name="tabview" 
                  AddTabButtonClick="tabview_AddTabButtonClick" 
                  TabCloseRequested="tabview_TabCloseRequested"
@@ -304,20 +320,17 @@
                                 <model:TabData />
                             </TabViewItem.DataContext>
                             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                                <TextBox x:Name="EditorTextBox" AcceptsReturn="True" TextWrapping="Wrap"
-                                 TextChanged="EditorTextBox_TextChanged" 
-                                 SelectionChanged="EditorTextBox_SelectionChanged" 
-                                 Loaded="EditorTextBox_Loaded"/>
+                                <TextBox x:Name="EditorTextBox"
+                                     TextChanged="EditorTextBox_TextChanged" 
+                                     SelectionChanged="EditorTextBox_SelectionChanged" 
+                                     Loaded="EditorTextBox_Loaded"/>
                             </ScrollViewer>
                         </TabViewItem>
                     </TabView.TabItems>
                 </TabView>
                 <!-- Layer 3: FindReplace UserControl overlay -->
-                <controls:FindReplace x:Name="FindReplaceBar"
-                              Visibility="Collapsed"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Top"
-                              Margin="0 20 0 0"/>
+                <controls:FindReplace x:Name="FindReplacePopUp" HorizontalAlignment="Center" VerticalAlignment="Top"
+                              Margin="0 10 0 0" Shadow="{StaticResource FindReplaceShadow}"/>
             </Grid>
         </Border>
 

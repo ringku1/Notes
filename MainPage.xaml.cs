@@ -12,6 +12,7 @@ using Windows.Storage;
 using WinRT.Interop;
 using WinUIApp1.Model;
 using WinUIApp1.Helpers;
+using System.Numerics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -29,42 +30,23 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         this.InitializeComponent();
-        LoadUserProfile();
         this.DataContext = this;
-        
-        FindReplaceBar.Loaded += (s, e) => {
-            // Access internal container
-            if (FindReplaceBar.Content is FrameworkElement content) {
-                var container = content.FindName("ShadowContainer") as FrameworkElement;
 
-                if (container != null) {
-                    // Set the Translation Z to "lift" the control (creates elevation)
-                    container.Translation = new System.Numerics.Vector3(0, 0, 32); // Z-elevation
-
-                    // Optional: make sure layout supports casting shadows
-                    Canvas.SetZIndex(FindReplaceBar, 10);
-                }
-            }
-        };
+        this.LoadUserProfile();
+        this.ApplyUserActivities();
     }
     protected override void OnNavigatedTo(NavigationEventArgs e) {
         base.OnNavigatedTo(e);
         m_window = e.Parameter as MainWindow;
     }
-    //private void MainPage_Loaded(object sender, RoutedEventArgs e) {
-    //    this.Loaded -= MainPage_Loaded;
-    //}
+    private void ApplyUserActivities() {
+        FindReplacePopUp.Loaded += (s, e) => {
+            FindReplacePopUp.Visibility = Visibility.Collapsed;
+            FindReplaceShadow.Receivers.Add(tabview);
+            FindReplacePopUp.Translation += new Vector3(0, 40, 32);
+        };
+    }
 
-    //private async void ShowInfoDialog(object sender, RoutedEventArgs e) {
-    //    ContentDialog dialog = new ContentDialog {
-    //        Title = "Information",
-    //        Content = "This is a open message.",
-    //        CloseButtonText = "OK",
-    //        XamlRoot = this.XamlRoot
-    //    };
-
-    //    await dialog.ShowAsync();
-    //}
     private void LoadUserProfile() {
         UserData = new UserData {
             UserName = "Jahirul Islam",
@@ -74,10 +56,7 @@ public sealed partial class MainPage : Page
     }
 
     private UIElement TabViewNewTab(String header, String content = "") {
-        var textBox = new TextBox {
-            AcceptsReturn = true,
-            TextWrapping = TextWrapping.Wrap
-        };
+        var textBox = new TextBox();
 
         var newTab = new TabViewItem {
             Header = header,
@@ -410,8 +389,8 @@ public sealed partial class MainPage : Page
         //Storyboard slideInStoryboard = (Storyboard)this.Resources["FindPageSlideIn"];
         //slideInStoryboard.Begin();
         //PopupRectangle.Translation += new Vector3(120, 50, 64);
-        if (FindReplaceBar.Visibility == Visibility.Collapsed) {
-            FindReplaceBar.Visibility = Visibility.Visible;
+        if (FindReplacePopUp.Visibility == Visibility.Collapsed) {
+            FindReplacePopUp.Visibility = Visibility.Visible;
         }
     }
 
