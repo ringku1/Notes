@@ -22,13 +22,11 @@ namespace WinUIApp1;
 /// <summary>
 /// An empty page that can be used on its own or navigated to within a Frame.
 /// </summary>
-public sealed partial class MainPage : Page
-{
+public sealed partial class MainPage : Page {
     public UserData? UserData { get; set; } = null;
     private MainWindow? m_window = null;
 
-    public MainPage()
-    {
+    public MainPage() {
         this.InitializeComponent();
         this.DataContext = this;
 
@@ -44,6 +42,7 @@ public sealed partial class MainPage : Page
             FindReplacePopUp.Visibility = Visibility.Collapsed;
             FindReplaceShadow.Receivers.Add(tabview);
             FindReplacePopUp.Translation += new Vector3(0, 40, 32);
+            FindReplacePopUp.selectedTab = (TabViewItem)this.tabview.SelectedItem;
         };
     }
 
@@ -56,7 +55,10 @@ public sealed partial class MainPage : Page
     }
 
     private UIElement TabViewNewTab(String header, String content = "") {
-        var textBox = new TextBox();
+        var textBox = new TextBox {
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap
+        };
 
         var newTab = new TabViewItem {
             Header = header,
@@ -185,7 +187,7 @@ public sealed partial class MainPage : Page
         return null;
     }
 
-    private TextBox? GetChildTextBox(TabViewItem parent) {
+    public static TextBox? GetChildTextBox(TabViewItem parent) {
         if (parent.Content == null)
             return null;
         return (parent.Content as ScrollViewer)?.Content as TextBox;
@@ -262,6 +264,7 @@ public sealed partial class MainPage : Page
                 }
             }
         }
+        FindReplacePopUp.selectedTab = selectedTab;
     }
 
     private void tabview_AddTabButtonClick(TabView sender, object args) {
@@ -377,21 +380,23 @@ public sealed partial class MainPage : Page
     }
 
     private void onFindClick(object sender, RoutedEventArgs e) {
-        //// Get the position of the button or any other element you want the FindPage to be anchored to
-        //var position = UserProfileButton.TransformToVisual(MainGrid).TransformPoint(new Point(0, 0));
-
-        //// Adjust the Frame's position 
-        //FindFrame.HorizontalOffset = position.X;
-        //FindFrame.VerticalOffset = position.Y;
-        //FindFrame.Navigate(typeof(FindPage));
-        //FindPage.Visibility = Visibility.Visible;
-        //// Begin the slide-in animation
-        //Storyboard slideInStoryboard = (Storyboard)this.Resources["FindPageSlideIn"];
-        //slideInStoryboard.Begin();
-        //PopupRectangle.Translation += new Vector3(120, 50, 64);
         if (FindReplacePopUp.Visibility == Visibility.Collapsed) {
             FindReplacePopUp.Visibility = Visibility.Visible;
         }
+
+        if (FindReplacePopUp.isReplaceToggled) {
+            FindReplacePopUp.ToggleReplaceSection();
+        }
+
+        if (tabview.SelectedItem is TabViewItem selectedTab) {
+            var editor = GetChildTextBox(selectedTab);
+            if (editor != null) {
+                string selectedText = editor.SelectedText.Trim();
+                FindReplacePopUp.findBox.Text = selectedText;
+            }
+        }
+        FindReplacePopUp.findBox.Focus(FocusState.Programmatic);
+        FindReplacePopUp.findBox.SelectAll();
     }
 
     private void onFindNextClick(object sender, RoutedEventArgs e) {

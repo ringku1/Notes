@@ -20,7 +20,6 @@
             <Setter Property="FontFamily" Value="Segoe UI"/>
         </Style>
         <Style TargetType="TextBox">
-            <!-- Your Desired Properties -->
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="#FF272727"/>
