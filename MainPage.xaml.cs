@@ -245,6 +245,7 @@ public sealed partial class MainPage : Page {
             if (tabData != null) {
                 UpdateCursorPosition(textBox, tabData);
             }
+            FindReplacePopUp.result.Clear();
         }
     }
     private void EditorTextBox_SelectionChanged(object sender, RoutedEventArgs e) {
@@ -397,6 +398,7 @@ public sealed partial class MainPage : Page {
         }
         FindReplacePopUp.findBox.Focus(FocusState.Programmatic);
         FindReplacePopUp.findBox.SelectAll();
+        FindReplacePopUp.triggerOnSearchIconClick(sender, e);
     }
 
     private void onFindNextClick(object sender, RoutedEventArgs e) {

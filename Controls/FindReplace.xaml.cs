@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -47,15 +48,22 @@ namespace WinUIApp1.Controls
                 _idx = _idx - 1 + result.Count;
                 _idx = _idx % result.Count;
                 await ChangeFocusTxt(_idx == result.Count - 1? "Found next from the bottom": "");
+            } else {
+                ShowNoMatchDialogue();
             }
         }
 
         private async void OnFindNextClick(object sender, RoutedEventArgs e) {
+            if (sender is Button rep_btn && rep_btn.Name == "ReplaceButton") {
+                _idx -= 1;
+            }
             if (result.Count > 0) {
                 _prevIdx = _idx;
                 _idx += 1;
                 _idx = _idx % result.Count;
                 await ChangeFocusTxt(_idx == 0 ? "Found next from the top" : "");
+            } else {
+                ShowNoMatchDialogue();
             }
         }
 
@@ -70,20 +78,62 @@ namespace WinUIApp1.Controls
             }
         }
         private void OnReplaceClick(object sender, RoutedEventArgs e) {
-
+            if(_idx != -1 && selectedTab != null && result.Count > 0) {
+                var editor = MainPage.GetChildTextBox(selectedTab);
+                if (editor != null) {
+                    editor.Text = editor.Text.Remove(result[_idx], target.Length).Insert(result[_idx], ReplaceTextBox.Text);
+                    result.RemoveAt(_idx);
+                    for(int i = _idx; i < result.Count; i++) {
+                        result[i] -= Math.Abs(target.Length - ReplaceTextBox.Text.Length);
+                    }
+                    OnFindNextClick(sender, e);
+                }
+            } else {
+                ShowNoMatchDialogue();
+            }
         }
 
         private void OnReplaceAllClick(object sender, RoutedEventArgs e) {
+            if (_idx != -1 && selectedTab != null && result.Count > 0) {
+                var editor = MainPage.GetChildTextBox(selectedTab);
+                if (editor != null) {
+                    string text = editor.Text;
+                    // Sort in descending order to avoid index shifting issues
+                    var sortedResults = result.ToList();
+                    sortedResults.Reverse();
 
+                    foreach (int pos in sortedResults) {
+                        if (pos + target.Length <= text.Length) {
+                            text = text.Remove(pos, target.Length).Insert(pos, ReplaceTextBox.Text);
+                        }
+                    }
+
+                    editor.Text = text;
+                    result.Clear();
+                }
+            }
         }
-
+        public void triggerOnSearchIconClick(object sender, RoutedEventArgs e) {
+            OnSearchIconClick(sender, e);
+        }
         private async void OnSearchIconClick(object sender, RoutedEventArgs e) {
             var stFindText = FindTextBox.Text.Trim();
-            if (target != stFindText) { 
+            if (target != stFindText || result.Count == 0) {
                 target = stFindText;
                 FindOccurrence();
             }
             var matches = result;
+            if(sender is MenuFlyoutItem FindMFI) {
+                if (selectedTab != null) {
+                    var editor = MainPage.GetChildTextBox(selectedTab);
+                    if (editor != null) {
+                        _idx = result.FindIndex(pos => pos == editor.SelectionStart);
+                        if (_idx != -1) {
+                            _idx -= 1;
+                        }
+                    }
+                }
+            }
 
             if (matches.Count > 0) {
                 _prevIdx = _idx;
@@ -91,16 +141,19 @@ namespace WinUIApp1.Controls
                 _idx = _idx % result.Count;
                 await ChangeFocusTxt(_idx == 0 && _prevIdx != -1 ? "Found next from the top" : "");
             } else {
-                ContentDialog noMatchDialog = new ContentDialog {
-                    XamlRoot = this.XamlRoot,
-                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-                    Title = "Notepad",
-                    Content = $"Cannot find \"{target}\"",
-                    CloseButtonText = "OK",
-                    DefaultButton = ContentDialogButton.Close
-                };
-                _ = noMatchDialog.ShowAsync();
+                ShowNoMatchDialogue();
             }
+        }
+        private void ShowNoMatchDialogue() {
+            ContentDialog noMatchDialog = new ContentDialog {
+                XamlRoot = this.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                Title = "Notepad",
+                Content = $"Cannot find \"{target}\"",
+                CloseButtonText = "OK",
+                DefaultButton = ContentDialogButton.Close
+            };
+            _ = noMatchDialog.ShowAsync();
         }
         private void FindOccurrence() {
             result.Clear();
@@ -118,6 +171,15 @@ namespace WinUIApp1.Controls
                 }
             }
         }
+
+        private void OnMatchCaseClick(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void OnWrapAroundClick(object sender, RoutedEventArgs e) {
+
+        }
+
         private async Task ChangeFocusTxt(string message) {
             if (selectedTab != null) {
                 var editor = MainPage.GetChildTextBox(selectedTab);

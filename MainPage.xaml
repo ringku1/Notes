@@ -137,7 +137,7 @@
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Text="Find" Click="onFindClick">
+                            <MenuFlyoutItem x:Name="FindMFI" Text="Find" Click="onFindClick">
                                 <MenuFlyoutItem.KeyboardAccelerators>
                                     <KeyboardAccelerator Modifiers="Control" Key="F"/>
                                 </MenuFlyoutItem.KeyboardAccelerators>

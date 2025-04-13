@@ -102,7 +102,16 @@
                         </Button>
                         <Button x:Name="MoreOptions" Grid.Column="3" Width="30" Click="OnMoreOptionsClick" Background="Transparent" BorderBrush="Transparent"
                                 ToolTipService.ToolTip="More options" ToolTipService.Placement="Top">
-                            <FontIcon Glyph="&#xE9E9;"/>
+                            <Button.Content>
+                                <FontIcon Glyph="&#xE9E9;"/>
+                            </Button.Content>
+                            
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Name="MatchCase" Text="Match case" Width="200" Click="OnMatchCaseClick"/>
+                                    <ToggleMenuFlyoutItem x:Name="WrapAround" Text="Wrap around" Width="200" IsChecked="True" Click="OnWrapAroundClick"/>
+                                </MenuFlyout>
+                            </Button.Flyout>
                         </Button>
                         <Button x:Name="CloseButton" Grid.Column="4" Width="30" Click="OnCloseButtonClick" Background="Transparent" BorderBrush="Transparent"
                                 ToolTipService.ToolTip="Exit Find and Replace" ToolTipService.Placement="Top">
@@ -131,7 +140,7 @@
             PlacementTarget="{Binding ElementName=RootContainer}"
             DesiredPlacement="Bottom"
             HorizontalOffset="0"
-            VerticalOffset="4">
+            VerticalOffset="8">
             <Grid Height="48" CornerRadius="9">
                 <Grid.Resources>
                     <ThemeShadow x:Name="SharedShadow" />
