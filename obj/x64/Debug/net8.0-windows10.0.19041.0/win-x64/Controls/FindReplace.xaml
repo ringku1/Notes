@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="WinUIApp1.Controls.FindReplace"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUIApp1.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:numerics="using:System.Numerics"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <!-- Style sets -->
+        <Style TargetType="Grid">
+            <Setter Property="CornerRadius" Value="5"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style TargetType="FontIcon">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <!-- StoryBoard -->
+        <Storyboard x:ConnectionId='2' x:Name="PopupFadeOutStoryboard">
+            <DoubleAnimation
+            Storyboard.TargetName="WrapAroundPopupBorder"
+            Storyboard.TargetProperty="Opacity"
+            From="1.0" To="0.0"
+            Duration="0:0:0.3"
+            BeginTime="0:0:1"/>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <Grid x:ConnectionId='3' x:Name="RootContainer">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border x:ConnectionId='4' x:Name="ShadowContainer" Background="#FF2C2C2C" HorizontalAlignment="Stretch"
+                BorderThickness="1" BorderBrush="DimGray" CornerRadius="6" Grid.Row="0">
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="38"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:ConnectionId='14' x:Name="ToggledButton" Width="30" Grid.Column="0"                            
+                        Margin="8 10 0 8" Background="Transparent" BorderBrush="Transparent"
+                        ToolTipService.ToolTip="Open replace options" ToolTipService.Placement="Top">
+                        <FontIcon x:ConnectionId='24' x:Name="ChevronIcon" Glyph="&#xE70E;" Foreground="White"/>
+                    </Button>
+
+                    <!-- FIND SECTION -->
+                    <Grid x:ConnectionId='15' x:Name="FindSection" Grid.Column="1" Padding="8 10 8 8" VerticalAlignment="Center" ColumnSpacing="10" RowSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0" Height="34" ColumnSpacing="9">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:ConnectionId='22' x:Name="FindTextBox" PlaceholderText="Find" MinWidth="172" BorderThickness="1" HorizontalAlignment="Left"/>
+                            <Button x:ConnectionId='23' Grid.Column="1" Width="30" Background="Transparent" BorderBrush="Transparent"                          >
+                                <FontIcon Glyph="&#xE721;"/>
+                            </Button>
+                        </Grid>
+                        <Button x:ConnectionId='16' x:Name="SearchDown" Grid.Column="1" Width="30"                         Background="Transparent" BorderBrush="Transparent"
+                                ToolTipService.ToolTip="Search down" ToolTipService.Placement="Top">
+                            <FontIcon Glyph="&#xE74B;"/>
+                        </Button>
+                        <Button x:ConnectionId='17' x:Name="SearchUp" Grid.Column="2" Width="30"                             Background="Transparent" BorderBrush="Transparent"
+                                ToolTipService.ToolTip="Search up" ToolTipService.Placement="Top">
+                            <FontIcon Glyph="&#xE74A;"/>
+                        </Button>
+                        <Button x:ConnectionId='18' x:Name="MoreOptions" Grid.Column="3" Width="30" Background="Transparent" BorderBrush="Transparent"
+                                ToolTipService.ToolTip="More options" ToolTipService.Placement="Top">
+                            <Button.Content>
+                                <FontIcon Glyph="&#xE9E9;"/>
+                            </Button.Content>
+                            
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:ConnectionId='20' x:Name="MatchCase" Text="Match case" Width="200"                         />
+                                    <ToggleMenuFlyoutItem x:ConnectionId='21' x:Name="WrapAround" Text="Wrap around" Width="200" IsChecked="True"                          />
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button x:ConnectionId='19' x:Name="CloseButton" Grid.Column="4" Width="30"                            Background="Transparent" BorderBrush="Transparent"
+                                ToolTipService.ToolTip="Exit Find and Replace" ToolTipService.Placement="Top">
+                            <FontIcon Glyph="&#xE711;"/>
+                        </Button>
+                    </Grid>
+                </Grid>
+                <!-- REPLACE SECTION -->
+                <Grid x:ConnectionId='10' x:Name="ReplaceSection" Grid.Row="1" Grid.Column="1" Visibility="Collapsed" Padding="8 0 8 10" VerticalAlignment="Center" ColumnSpacing="9">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:ConnectionId='11' x:Name="ReplaceTextBox" Grid.Column="0" PlaceholderText="Replace" MinWidth="135" BorderThickness="1" HorizontalAlignment="Left"/>
+                    <Button x:ConnectionId='12' x:Name="ReplaceButton" Grid.Column="1" Content="Replace" Width="90" Height="34"                       />
+                    <Button x:ConnectionId='13' x:Name="ReplaceAllButton" Grid.Column="2" Content="Replace All" Width="90" Height="34"                          />
+                </Grid>
+            </Grid>
+        </Border>
+        
+        <Popup x:ConnectionId='5' 
+            x:Name="WrapAroundPopup"
+            IsOpen="False"
+            PlacementTarget="{Binding ElementName=RootContainer}"
+            DesiredPlacement="Bottom"
+            HorizontalOffset="0"
+            VerticalOffset="8">
+            <Grid Height="48" CornerRadius="9">
+                <Grid.Resources>
+                    <ThemeShadow x:ConnectionId='6' x:Name="SharedShadow" />
+                </Grid.Resources>
+
+                <Grid x:ConnectionId='7' x:Name="ShadowReceiver" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+                
+                <Rectangle x:ConnectionId='8'
+                        x:Name="PopupRectangle"
+                        Fill="#FF2C2C2C"
+                        RadiusX="9"
+                        RadiusY="9"
+                        Shadow="{StaticResource SharedShadow}">
+                </Rectangle>
+
+                <TextBlock x:ConnectionId='9' x:Name="WrapAroundText"
+                   Text="Found next from top"
+                   Foreground="White"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Center"
+                   Padding="20,24"/>
+            </Grid>
+        </Popup>
+    </Grid>
+</UserControl>
+
