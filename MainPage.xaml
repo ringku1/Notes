@@ -307,26 +307,12 @@
                 <Grid.Resources>
                     <ThemeShadow x:Name="FindReplaceShadow"/>
                 </Grid.Resources>
-                
+
                 <TabView x:Name="tabview" 
                  AddTabButtonClick="tabview_AddTabButtonClick" 
                  TabCloseRequested="tabview_TabCloseRequested"
                  SelectionChanged="tabview_SelectionChanged"
-                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    <TabView.TabItems>
-                        <TabViewItem Header="Untitled" Tag="Untitled.txt">
-                            <TabViewItem.DataContext>
-                                <model:TabData />
-                            </TabViewItem.DataContext>
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                                <TextBox x:Name="EditorTextBox"
-                                     TextChanged="EditorTextBox_TextChanged" 
-                                     SelectionChanged="EditorTextBox_SelectionChanged" 
-                                     Loaded="EditorTextBox_Loaded"/>
-                            </ScrollViewer>
-                        </TabViewItem>
-                    </TabView.TabItems>
-                </TabView>
+                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                 <!-- Layer 3: FindReplace UserControl overlay -->
                 <controls:FindReplace x:Name="FindReplacePopUp" HorizontalAlignment="Center" VerticalAlignment="Top"
                               Margin="0 10 0 0" Shadow="{StaticResource FindReplaceShadow}"/>

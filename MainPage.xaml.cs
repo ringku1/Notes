@@ -30,14 +30,20 @@ public sealed partial class MainPage : Page {
         this.InitializeComponent();
         this.DataContext = this;
 
-        this.LoadUserProfile();
-        this.ApplyUserActivities();
+        this.initializeMainPage();
     }
+
+    private void initializeMainPage() {
+        addNewTab("Untitled");
+        this.loadUserProfile();
+        this.applyUserActivities();
+    }
+
     protected override void OnNavigatedTo(NavigationEventArgs e) {
         base.OnNavigatedTo(e);
         m_window = e.Parameter as MainWindow;
     }
-    private void ApplyUserActivities() {
+    private void applyUserActivities() {
         FindReplacePopUp.Loaded += (s, e) => {
             FindReplacePopUp.Visibility = Visibility.Collapsed;
             FindReplaceShadow.Receivers.Add(tabview);
@@ -46,7 +52,7 @@ public sealed partial class MainPage : Page {
         };
     }
 
-    private void LoadUserProfile() {
+    private void loadUserProfile() {
         UserData = new UserData {
             UserName = "Jahirul Islam",
             UserEmail = "jahirulislam8265@outlook.com",
@@ -54,10 +60,12 @@ public sealed partial class MainPage : Page {
         };
     }
 
-    private UIElement TabViewNewTab(String header, String content = "") {
+    private UIElement addNewTab(String header, String content = "") {
         var textBox = new TextBox {
             AcceptsReturn = true,
-            TextWrapping = TextWrapping.Wrap
+            TextWrapping = TextWrapping.Wrap,
+            IsSpellCheckEnabled = true,
+            IsTextPredictionEnabled = true
         };
 
         var newTab = new TabViewItem {
@@ -98,7 +106,7 @@ public sealed partial class MainPage : Page {
         StorageFile file = await picker.PickSingleFileAsync();
         if (file != null) {
             string fileContent = await FileIO.ReadTextAsync(file);
-            TabViewItem openTab = (TabViewItem)TabViewNewTab(file.Name, fileContent);
+            TabViewItem openTab = (TabViewItem)addNewTab(file.Name, fileContent);
             openTab.Tag = file.Path;
             var textBox = GetChildTextBox(openTab);
             if (textBox != null) {
@@ -269,7 +277,7 @@ public sealed partial class MainPage : Page {
     }
 
     private void tabview_AddTabButtonClick(TabView sender, object args) {
-        TabViewNewTab("Untitled");
+        addNewTab("Untitled");
     }
 
     private async void tabview_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
@@ -305,7 +313,7 @@ public sealed partial class MainPage : Page {
     }
 
     // Event handler for the MainWindow
-    private void onNewTabClick(object sender, RoutedEventArgs e) { TabViewNewTab("Untitled"); }
+    private void onNewTabClick(object sender, RoutedEventArgs e) { addNewTab("Untitled"); }
 
     private void onNewWindowClick(object sender, RoutedEventArgs e) {
         Window newWindow = WindowHelper.CreateWindow();
